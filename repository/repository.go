@@ -11,26 +11,32 @@ type repository struct {
 	db *gorm.DB
 }
 
-func (r *repository) Read() ([]model.Question, error) {
-
-	return []model.Question{}, nil
+func (r *repository) GetByID(id int64) (*model.ModelEntity, error) {
+	var entry model.ModelEntity
+	errs := r.db.First(&entry, id).GetErrors()
+	if len(errs) > 0 {
+		return &entry, errs[0]
+	}
+	return &entry, nil
 }
 
-func (r *repository) GetByID(id int64) (model.Question, error) {
+func (r *repository) Delete(entry *model.ModelEntity) error {
+	errs := r.db.Delete(entry).GetErrors()
 
-	return model.Question{}, nil
-}
-
-func (r *repository) Update(entry *model.Question) error {
+	if len(errs) > 0 {
+		return errs[0]
+	}
 
 	return nil
 }
 
-func (r *repository) Delete(entry *model.Question) error {
-	return nil
-}
+func (r *repository) Create(entry *model.ModelEntity) error {
 
-func (r *repository) Create(entry *model.Question) error {
+	errs := r.db.Create(entry).GetErrors()
+	if len(errs) > 0 {
+		return errs[0]
+	}
+
 	return nil
 }
 

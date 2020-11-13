@@ -5,6 +5,7 @@ import (
 )
 
 type Test struct {
+	ModelEntity
 	gorm.Model
 	UserID         uint   `json:"user_id"`
 	NumOfQuestions int    `json:"num_of_questions"`

@@ -3,6 +3,7 @@ package http
 import (
 	"net/http"
 	"online-tests/app"
+	"online-tests/delivery/command"
 	"online-tests/domain"
 
 	"github.com/jinzhu/gorm"
@@ -32,11 +33,30 @@ func NewHandler(e *echo.Echo, app *app.App) {
 }
 
 func (s *server) GetTest(c echo.Context) error {
+	var err error
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
 
 	return c.String(http.StatusOK, "ok")
 }
 
 func (s *server) AddTest(c echo.Context) error {
+	var err error
+	cmd := command.AddTestCmd{}
+
+	err = c.Bind(cmd)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	err = s.TestsService.AddTest(cmd)
+
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
 
 	return c.String(http.StatusOK, "ok")
 }

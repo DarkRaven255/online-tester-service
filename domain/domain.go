@@ -1,18 +1,18 @@
 package domain
 
-import "online-tests/domain/model"
+import (
+	"online-tests/delivery/command"
+	"online-tests/delivery/response"
+	"online-tests/domain/model"
+)
 
 type TestsService interface {
-	GetTest(testID int64) error
-	Create(question *model.Question) error
-	Read() ([]model.Question, error)
-	Delete(id int64) error
+	GetTest(testID uint) (*response.GetTestResp, error)
+	AddTest(addTestCmd command.AddTestCmd) error
 }
 
 type TestsRepository interface {
-	Create(question *model.Question) error
-	Read() ([]model.Question, error)
-	Update(question *model.Question) error
-	Delete(question *model.Question) error
-	GetByID(id int64) (model.Question, error)
+	Create(entity *model.ModelEntity) error
+	Delete(entity *model.ModelEntity) error
+	GetByID(id int64) (*model.ModelEntity, error)
 }

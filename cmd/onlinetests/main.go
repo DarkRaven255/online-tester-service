@@ -85,15 +85,9 @@ func migrate(db *gorm.DB) *gorm.DB {
 	// db.Model(&model.Results{}).AddForeignKey("test_id", "onlinetests.tests(id)", "CASCADE", "CASCADE")
 	// db.Model(&model.Results{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
 	db.AutoMigrate(&model.Test{})
-	// db.Model(&model.Test{}).Association("Questions")
 	// db.Model(&model.Test{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
-
 	db.AutoMigrate(&model.Question{})
-	// db.Model(&model.Question{}).Association("Answers")
-	// db.Model(&model.Question{}).AddForeignKey("test_id", "onlinetests.tests(id)", "CASCADE", "CASCADE")
-
 	db.AutoMigrate(&model.Answer{})
-	// db.Model(&model.Answer{}).AddForeignKey("question_id", "onlinetests.questions(id)", "CASCADE", "CASCADE")
 
 	return db
 }

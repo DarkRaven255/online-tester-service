@@ -6,11 +6,13 @@ Content-Type: application/json
 
 {
    "test":{
+      "title": "Epic test title",
       "user_id":123,
       "num_of_questions":2,
       "questions":[
          {
             "question":"to be or not to be?",
+            "required": true,
             "answers":[
                {
                   "answer":"yes",
@@ -24,6 +26,7 @@ Content-Type: application/json
          },
          {
             "question":"1 or 2?",
+            "required": false,
             "answers":[
                {
                   "answer":"1",

@@ -7,16 +7,9 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// type Test struct {
-// 	ModelEntity
-// 	gorm.Model
-// 	UserID         uint   `json:"user_id"`
-// 	NumOfQuestions int    `json:"num_of_questions"`
-// 	TestCode       string `json:"test_code"`
-// }
-
 type Test struct {
 	gorm.Model
+	Title          string     `json:"title"`
 	UserID         uint       `json:"user_id"`
 	NumOfQuestions int        `json:"num_of_questions"`
 	TestUUID       string     `json:"test_uuid"`
@@ -30,6 +23,7 @@ func (Test) TableName() string {
 func NewTestModel(cmd *command.AddTestCmd) Test {
 	tuuid := uuid.New().String()
 	return Test{
+		Title:          cmd.Test.Title,
 		UserID:         cmd.Test.UserID,
 		NumOfQuestions: cmd.Test.NumOfQuestions,
 		TestUUID:       tuuid,

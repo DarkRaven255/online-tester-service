@@ -17,9 +17,12 @@ func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
 		test = model.NewTestModel(cmd)
 	)
 
-	es.testsRepo.Create(&test)
+	err = es.testsRepo.Create(&test)
+	if err != nil {
+		return err
+	}
 
-	return err
+	return nil
 }
 
 func (es *testsService) GetTest(testID uint) (*response.GetTestResp, error) {

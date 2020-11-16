@@ -46,13 +46,13 @@ func (s *server) AddTest(c echo.Context) error {
 	var err error
 	cmd := command.AddTestCmd{}
 
-	err = c.Bind(cmd)
+	err = c.Bind(&cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	err = s.TestsService.AddTest(cmd)
+	err = s.TestsService.AddTest(&cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})

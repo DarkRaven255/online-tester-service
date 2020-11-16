@@ -4,14 +4,21 @@ import (
 	"online-tests/delivery/command"
 	"online-tests/delivery/response"
 	"online-tests/domain"
+	"online-tests/domain/model"
 )
 
 type testsService struct {
 	testsRepo domain.TestsRepository
 }
 
-func (es *testsService) AddTest(cmd command.AddTestCmd) error {
-	var err error
+func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
+	var (
+		err  error
+		test = model.NewTestModel(cmd)
+	)
+
+	es.testsRepo.Create(&test)
+
 	return err
 }
 

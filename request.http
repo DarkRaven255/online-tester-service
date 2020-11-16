@@ -1,1 +1,40 @@
 @host = http://localhost:8081
+
+###
+POST {{host}}/test
+Content-Type: application/json
+
+{
+   "test":{
+      "user_id":123,
+      "num_of_questions":2,
+      "questions":[
+         {
+            "question":"to be or not to be?",
+            "answers":[
+               {
+                  "answer":"yes",
+                  "correct":false
+               },
+               {
+                  "answer":"no",
+                  "correct":true
+               }
+            ]
+         },
+         {
+            "question":"1 or 2?",
+            "answers":[
+               {
+                  "answer":"1",
+                  "correct":true
+               },
+               {
+                  "answer":"2",
+                  "correct":true
+               }
+            ]
+         }
+      ]
+   }
+}

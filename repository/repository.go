@@ -11,8 +11,8 @@ type repository struct {
 	db *gorm.DB
 }
 
-func (r *repository) GetByID(id int64) (*model.ModelEntity, error) {
-	var entry model.ModelEntity
+func (r *repository) GetByID(id int64) (*model.Test, error) {
+	var entry model.Test
 	errs := r.db.First(&entry, id).GetErrors()
 	if len(errs) > 0 {
 		return &entry, errs[0]
@@ -20,7 +20,7 @@ func (r *repository) GetByID(id int64) (*model.ModelEntity, error) {
 	return &entry, nil
 }
 
-func (r *repository) Delete(entry *model.ModelEntity) error {
+func (r *repository) Delete(entry *model.Test) error {
 	errs := r.db.Delete(entry).GetErrors()
 
 	if len(errs) > 0 {
@@ -30,7 +30,7 @@ func (r *repository) Delete(entry *model.ModelEntity) error {
 	return nil
 }
 
-func (r *repository) Create(entry *model.ModelEntity) error {
+func (r *repository) Create(entry *model.Test) error {
 
 	errs := r.db.Create(entry).GetErrors()
 	if len(errs) > 0 {

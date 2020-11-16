@@ -5,7 +5,6 @@ import (
 )
 
 type Results struct {
-	ModelEntity
 	gorm.Model
 	TestID uint    `json:"test_id"`
 	UserID uint    `json:"user_id"`

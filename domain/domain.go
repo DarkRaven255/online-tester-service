@@ -8,11 +8,11 @@ import (
 
 type TestsService interface {
 	GetTest(testID uint) (*response.GetTestResp, error)
-	AddTest(addTestCmd command.AddTestCmd) error
+	AddTest(addTestCmd *command.AddTestCmd) error
 }
 
 type TestsRepository interface {
-	Create(entity *model.ModelEntity) error
-	Delete(entity *model.ModelEntity) error
-	GetByID(id int64) (*model.ModelEntity, error)
+	Create(test *model.Test) error
+	Delete(test *model.Test) error
+	GetByID(id int64) (*model.Test, error)
 }

@@ -1,4 +1,4 @@
-package model
+package domainmodel
 
 import "github.com/jinzhu/gorm"
 

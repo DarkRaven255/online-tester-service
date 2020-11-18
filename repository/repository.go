@@ -2,7 +2,7 @@ package repository
 
 import (
 	"online-tests/domain"
-	"online-tests/domain/model"
+	"online-tests/domain/domainmodel"
 
 	"github.com/jinzhu/gorm"
 )
@@ -11,16 +11,19 @@ type repository struct {
 	db *gorm.DB
 }
 
-func (r *repository) GetByID(id int64) (*model.Test, error) {
-	var entry model.Test
-	errs := r.db.First(&entry, id).GetErrors()
+func (r *repository) GetByID(testUUID string) (*domainmodel.Test, error) {
+	var entry domainmodel.Test
+	var errs []error
+
+	errs = r.db.Preload("Questions").Preload("Questions.Answers").Where("test_uuid = ?", testUUID).First(&entry).GetErrors()
+
 	if len(errs) > 0 {
 		return &entry, errs[0]
 	}
 	return &entry, nil
 }
 
-func (r *repository) Delete(entry *model.Test) error {
+func (r *repository) Delete(entry *domainmodel.Test) error {
 	errs := r.db.Delete(entry).GetErrors()
 
 	if len(errs) > 0 {
@@ -30,7 +33,7 @@ func (r *repository) Delete(entry *model.Test) error {
 	return nil
 }
 
-func (r *repository) Create(entry *model.Test) error {
+func (r *repository) Create(entry *domainmodel.Test) error {
 
 	errs := r.db.Create(entry).GetErrors()
 	if len(errs) > 0 {

@@ -41,3 +41,6 @@ Content-Type: application/json
       ]
    }
 }
+
+###
+GET {{host}}/test/7921d2fa-c9d1-45ef-875b-60662e70a1ca

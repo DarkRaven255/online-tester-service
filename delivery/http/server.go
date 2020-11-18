@@ -33,13 +33,20 @@ func NewHandler(e *echo.Echo, app *app.App) {
 }
 
 func (s *server) GetTest(c echo.Context) error {
-	var err error
+	var (
+		err      error
+		testUUID string
+	)
+
+	testUUID = c.Param("id")
+
+	resp, err := s.TestsService.GetTest(testUUID)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	return c.String(http.StatusOK, "ok")
+	return c.JSON(http.StatusOK, resp)
 }
 
 func (s *server) AddTest(c echo.Context) error {

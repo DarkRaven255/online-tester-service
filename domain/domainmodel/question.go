@@ -1,16 +1,16 @@
-package model
+package domainmodel
 
 import (
-	"online-tests/delivery/model"
+	"online-tests/delivery/command/cmdmodel"
 
 	"github.com/jinzhu/gorm"
 )
 
 type Question struct {
-	*gorm.Model
+	gorm.Model
 	Question string   `json:"question"`
-	Required bool     `json:"required"`
-	TestID   uint     `json:"test_id"`
+	Required bool     `json:"-"`
+	TestID   uint     `json:"-"`
 	Answers  []Answer `json:"answers" gorm:"foreignKey:QuestionID"`
 }
 
@@ -18,7 +18,7 @@ func (Question) TableName() string {
 	return "onlinetests.questions"
 }
 
-func NewQuestion(q *model.Question) *Question {
+func NewQuestion(q *cmdmodel.Question) *Question {
 	return &Question{
 		Question: q.Question,
 		Required: q.Required,
@@ -26,7 +26,7 @@ func NewQuestion(q *model.Question) *Question {
 	}
 }
 
-func NewQuestionsArray(qArr *[]model.Question) *[]Question {
+func NewQuestionsArray(qArr *[]cmdmodel.Question) *[]Question {
 	questions := []Question{}
 	for _, q := range *qArr {
 		questions = append(questions, *NewQuestion(&q))

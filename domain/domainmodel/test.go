@@ -2,17 +2,20 @@ package domainmodel
 
 import (
 	"online-tests/delivery/command"
+	"time"
 
 	"github.com/google/uuid"
-	"github.com/jinzhu/gorm"
 )
 
 type Test struct {
-	gorm.Model
+	ID             uint64     `json:"id" gorm:"primary_key"`
+	CreatedAt      time.Time  `json:"-"`
+	UpdatedAt      time.Time  `json:"updatedAt"`
+	DeletedAt      *time.Time `json:"-" sql:"index"`
 	Title          string     `json:"title"`
-	UserID         uint       `json:"user_id"`
-	NumOfQuestions int        `json:"num_of_questions"`
-	TestUUID       string     `json:"test_uuid" qorm:"unique"`
+	UserID         uint64     `json:"userID"`
+	NumOfQuestions uint       `json:"numOfQuestions"`
+	TestUUID       string     `json:"testUUID" qorm:"unique"`
 	Questions      []Question `json:"questions" gorm:"foreignKey:TestID"`
 }
 

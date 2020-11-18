@@ -7,8 +7,8 @@ Content-Type: application/json
 {
    "test":{
       "title": "Epic test title",
-      "user_id":123,
-      "num_of_questions":2,
+      "userID":123,
+      "numOfQuestions":2,
       "questions":[
          {
             "question":"to be or not to be?",
@@ -43,4 +43,48 @@ Content-Type: application/json
 }
 
 ###
+POST {{host}}/test
+Content-Type: application/json
+
+{
+   "test":{
+      "title": "Second test",
+      "userID":331,
+      "numOfQuestions":5,
+      "questions":[
+         {
+            "question":"Is it good enough??",
+            "required": true,
+            "answers":[
+               {
+                  "answer":"si",
+                  "correct":false
+               },
+               {
+                  "answer":"nope",
+                  "correct":false
+               }
+            ]
+         },
+         {
+            "question":"oui?",
+            "required": false,
+            "answers":[
+               {
+                  "answer":"non",
+                  "correct":true
+               },
+               {
+                  "answer":"yup",
+                  "correct":true
+               }
+            ]
+         }
+      ]
+   }
+}
+
+###
 GET {{host}}/test/7921d2fa-c9d1-45ef-875b-60662e70a1ca
+###
+GET {{host}}/test/dae86522-3ed3-4589-adbd-3603b74275c2

@@ -2,16 +2,18 @@ package domainmodel
 
 import (
 	"online-tests/delivery/command/cmdmodel"
-
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type Question struct {
-	gorm.Model
-	Question string   `json:"question"`
-	Required bool     `json:"-"`
-	TestID   uint     `json:"-"`
-	Answers  []Answer `json:"answers" gorm:"foreignKey:QuestionID"`
+	ID        uint64     `json:"id" gorm:"primary_key"`
+	CreatedAt time.Time  `json:"-"`
+	UpdatedAt time.Time  `json:"updatedAt"`
+	DeletedAt *time.Time `json:"-" sql:"index"`
+	Question  string     `json:"question"`
+	Required  bool       `json:"-"`
+	TestID    uint64     `json:"-"`
+	Answers   []Answer   `json:"answers" gorm:"foreignKey:QuestionID"`
 }
 
 func (Question) TableName() string {

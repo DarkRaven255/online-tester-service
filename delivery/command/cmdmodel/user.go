@@ -1,4 +1,4 @@
-package model
+package cmdmodel
 
 type User struct {
 	Username string `json:"username"`

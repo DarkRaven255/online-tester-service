@@ -1,7 +1,7 @@
 package command
 
-import "online-tests/delivery/model"
+import "online-tests/delivery/command/cmdmodel"
 
 type AddTestCmd struct {
-	Test model.Test `json:"test"`
+	Test cmdmodel.Test `json:"test"`
 }

@@ -1,4 +1,4 @@
-package model
+package domainmodel
 
 import (
 	"online-tests/delivery/command"
@@ -12,7 +12,7 @@ type Test struct {
 	Title          string     `json:"title"`
 	UserID         uint       `json:"user_id"`
 	NumOfQuestions int        `json:"num_of_questions"`
-	TestUUID       string     `json:"test_uuid"`
+	TestUUID       string     `json:"test_uuid" qorm:"unique"`
 	Questions      []Question `json:"questions" gorm:"foreignKey:TestID"`
 }
 

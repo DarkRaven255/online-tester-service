@@ -3,16 +3,16 @@ package domain
 import (
 	"online-tests/delivery/command"
 	"online-tests/delivery/response"
-	"online-tests/domain/model"
+	"online-tests/domain/domainmodel"
 )
 
 type TestsService interface {
-	GetTest(testID uint) (*response.GetTestResp, error)
+	GetTest(testUUID string) (*response.GetTestResp, error)
 	AddTest(addTestCmd *command.AddTestCmd) error
 }
 
 type TestsRepository interface {
-	Create(test *model.Test) error
-	Delete(test *model.Test) error
-	GetByID(id int64) (*model.Test, error)
+	Create(test *domainmodel.Test) error
+	Delete(test *domainmodel.Test) error
+	GetByID(id string) (*domainmodel.Test, error)
 }

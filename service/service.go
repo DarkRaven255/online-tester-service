@@ -4,7 +4,7 @@ import (
 	"online-tests/delivery/command"
 	"online-tests/delivery/response"
 	"online-tests/domain"
-	"online-tests/domain/model"
+	"online-tests/domain/domainmodel"
 )
 
 type testsService struct {
@@ -14,7 +14,7 @@ type testsService struct {
 func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
 	var (
 		err  error
-		test = model.NewTestModel(cmd)
+		test = domainmodel.NewTestModel(cmd)
 	)
 
 	err = es.testsRepo.Create(&test)
@@ -25,9 +25,15 @@ func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
 	return nil
 }
 
-func (es *testsService) GetTest(testID uint) (*response.GetTestResp, error) {
+func (es *testsService) GetTest(testUUID string) (*response.GetTestResp, error) {
 	var err error
-	return nil, err
+
+	result, err := es.testsRepo.GetByID(testUUID)
+	if err != nil {
+		return nil, err
+	}
+
+	return response.NewGetTestResponse(result), nil
 }
 
 func NewTestService(er domain.TestsRepository) domain.TestsService {

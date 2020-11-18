@@ -7,7 +7,7 @@ import (
 	"online-tests/app"
 	"online-tests/config"
 	"online-tests/delivery/http"
-	"online-tests/domain/model"
+	"online-tests/domain/domainmodel"
 	"online-tests/repository"
 	"online-tests/service"
 	"os"
@@ -84,10 +84,10 @@ func migrate(db *gorm.DB) *gorm.DB {
 	// db.AutoMigrate(&model.Results{})
 	// db.Model(&model.Results{}).AddForeignKey("test_id", "onlinetests.tests(id)", "CASCADE", "CASCADE")
 	// db.Model(&model.Results{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
-	db.AutoMigrate(&model.Test{})
+	db.AutoMigrate(&domainmodel.Test{})
 	// db.Model(&model.Test{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
-	db.AutoMigrate(&model.Question{})
-	db.AutoMigrate(&model.Answer{})
+	db.AutoMigrate(&domainmodel.Question{})
+	db.AutoMigrate(&domainmodel.Answer{})
 
 	return db
 }

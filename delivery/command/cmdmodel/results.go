@@ -1,4 +1,4 @@
-package model
+package cmdmodel
 
 type Results struct {
 	TestID uint    `json:"test_id"`

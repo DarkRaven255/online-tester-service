@@ -1,4 +1,4 @@
-package model
+package cmdmodel
 
 type Answer struct {
 	Answer  string `json:"answer"`

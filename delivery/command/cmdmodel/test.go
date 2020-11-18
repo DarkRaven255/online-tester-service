@@ -1,4 +1,4 @@
-package model
+package cmdmodel
 
 type Test struct {
 	Title          string     `json:"title"`

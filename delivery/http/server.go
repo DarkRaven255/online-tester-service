@@ -20,6 +20,10 @@ type ResponseResult struct {
 	Success bool   `json:"success"`
 }
 
+type ResponseTestCode struct {
+	TestCode string `json:"testCode"`
+}
+
 type server struct {
 	*app.App
 }
@@ -28,25 +32,8 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	handler := &server{
 		app,
 	}
-	e.GET("/test/:id", handler.GetTest)
 	e.POST("/test", handler.AddTest)
-}
-
-func (s *server) GetTest(c echo.Context) error {
-	var (
-		err      error
-		testUUID string
-	)
-
-	testUUID = c.Param("id")
-
-	resp, err := s.TestsService.GetTest(testUUID)
-
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, resp)
+	e.GET("/test/:id", handler.GetTest)
 }
 
 func (s *server) AddTest(c echo.Context) error {
@@ -59,14 +46,50 @@ func (s *server) AddTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	err = s.TestsService.AddTest(&cmd)
+	testCode, err := s.TestsService.AddTest(&cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 	}
 
-	return c.String(http.StatusOK, "ok")
+	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: testCode})
 }
+
+func (s *server) GetTest(c echo.Context) error {
+	var (
+		err      error
+		testCode string
+	)
+
+	testCode = c.Param("id")
+
+	resp, err := s.TestsService.GetTest(testCode)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+// func (s *server) AddTest(c echo.Context) error {
+// 	var err error
+// 	cmd := command.AddTestCmd{}
+
+// 	err = c.Bind(&cmd)
+
+// 	if err != nil {
+// 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+// 	}
+
+// 	err = s.TestsService.AddTest(&cmd)
+
+// 	if err != nil {
+// 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+// 	}
+
+// 	return c.String(http.StatusOK, "ok")
+// }
 
 func getStatusCode(err error) int {
 	if err == nil {

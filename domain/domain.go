@@ -9,10 +9,11 @@ import (
 type TestsService interface {
 	AddTest(addTestCmd *command.AddTestCmd) (string, error)
 	GetTest(testCode string) (*response.GetTestResp, error)
+	DeleteTest(testCode string) error
 }
 
 type TestsRepository interface {
 	Create(test *domainmodel.Test) error
-	Delete(test *domainmodel.Test) error
+	Delete(testCode string) error
 	GetByID(testCode string) (*domainmodel.Test, error)
 }

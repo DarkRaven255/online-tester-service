@@ -85,6 +85,7 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/7921d2fa-c9d1-45ef-875b-60662e70a1ca
+GET {{host}}/test/OUY9efND
+
 ###
-GET {{host}}/test/dae86522-3ed3-4589-adbd-3603b74275c2
+DELETE {{host}}/test/OUY9efND

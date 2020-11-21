@@ -2,9 +2,8 @@ package domainmodel
 
 import (
 	"online-tests/delivery/command"
+	"online-tests/utils"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Test struct {
@@ -15,7 +14,7 @@ type Test struct {
 	Title          string     `json:"title"`
 	UserID         uint64     `json:"userID"`
 	NumOfQuestions uint       `json:"numOfQuestions"`
-	TestUUID       string     `json:"testUUID" qorm:"unique"`
+	TestCode       string     `json:"testCode" qorm:"unique"`
 	Questions      []Question `json:"questions" gorm:"foreignKey:TestID"`
 }
 
@@ -24,12 +23,12 @@ func (Test) TableName() string {
 }
 
 func NewTestModel(cmd *command.AddTestCmd) Test {
-	tuuid := uuid.New().String()
+	tCode := utils.RandomCode(8)
 	return Test{
 		Title:          cmd.Test.Title,
 		UserID:         cmd.Test.UserID,
 		NumOfQuestions: cmd.Test.NumOfQuestions,
-		TestUUID:       tuuid,
+		TestCode:       tCode,
 		Questions:      *NewQuestionsArray(&cmd.Test.Questions),
 	}
 }

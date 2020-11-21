@@ -22,13 +22,13 @@ func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
 		return err
 	}
 
-	return nil
+	return test.TestCode, nil
 }
 
-func (es *testsService) GetTest(testUUID string) (*response.GetTestResp, error) {
+func (es *testsService) GetTest(testCode string) (*response.GetTestResp, error) {
 	var err error
 
-	result, err := es.testsRepo.GetByID(testUUID)
+	result, err := es.testsRepo.GetByID(testCode)
 	if err != nil {
 		return nil, err
 	}

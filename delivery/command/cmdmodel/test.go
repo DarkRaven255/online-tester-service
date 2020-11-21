@@ -5,4 +5,5 @@ type Test struct {
 	UserID         uint64     `json:"userID"`
 	NumOfQuestions uint       `json:"numOfQuestions"`
 	Questions      []Question `json:"questions"`
+	TestCode       string     `json:"testCode,omitempty"`
 }

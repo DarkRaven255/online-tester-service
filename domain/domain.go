@@ -7,12 +7,12 @@ import (
 )
 
 type TestsService interface {
-	GetTest(testUUID string) (*response.GetTestResp, error)
-	AddTest(addTestCmd *command.AddTestCmd) error
+	AddTest(addTestCmd *command.AddTestCmd) (string, error)
+	GetTest(testCode string) (*response.GetTestResp, error)
 }
 
 type TestsRepository interface {
 	Create(test *domainmodel.Test) error
 	Delete(test *domainmodel.Test) error
-	GetByID(id string) (*domainmodel.Test, error)
+	GetByID(testCode string) (*domainmodel.Test, error)
 }

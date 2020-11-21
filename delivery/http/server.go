@@ -15,11 +15,6 @@ type ResponseError struct {
 	Message string `json:"message"`
 }
 
-type ResponseResult struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
-}
-
 type ResponseTestCode struct {
 	TestCode string `json:"testCode"`
 }
@@ -48,7 +43,7 @@ func (s *server) AddTest(c echo.Context) error {
 	err = c.Bind(&cmd)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
 	}
 
 	testCode, err := s.TestsService.AddTest(&cmd)
@@ -71,7 +66,7 @@ func (s *server) GetTest(c echo.Context) error {
 	resp, err := s.TestsService.GetTest(testCode)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -88,7 +83,7 @@ func (s *server) DeleteTest(c echo.Context) error {
 	err = s.TestsService.DeleteTest(testCode)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, ResponseStatus{Status: "ok"})

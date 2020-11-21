@@ -36,6 +36,17 @@ func (es *testsService) GetTest(testCode string) (*response.GetTestResp, error) 
 	return response.NewGetTestResponse(result), nil
 }
 
+func (es *testsService) DeleteTest(testCode string) error {
+	var err error
+
+	err = es.testsRepo.Delete(testCode)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewTestService(er domain.TestsRepository) domain.TestsService {
 	es := &testsService{
 		testsRepo: er,

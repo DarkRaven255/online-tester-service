@@ -23,8 +23,8 @@ func (r *repository) GetByID(testCode string) (*domainmodel.Test, error) {
 	return &entry, nil
 }
 
-func (r *repository) Delete(entry *domainmodel.Test) error {
-	errs := r.db.Delete(entry).GetErrors()
+func (r *repository) Delete(testCode string) error {
+	errs := r.db.Preload("Questions").Preload("Questions.Answers").Where("test_code = ?", testCode).Delete(domainmodel.Test{}).GetErrors()
 
 	if len(errs) > 0 {
 		return errs[0]

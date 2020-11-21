@@ -13,7 +13,7 @@ type Question struct {
 	Question  string     `json:"question"`
 	Required  bool       `json:"-"`
 	TestID    uint64     `json:"-"`
-	Answers   []Answer   `json:"answers" gorm:"foreignKey:QuestionID"`
+	Answers   []Answer   `json:"answers" gorm:"foreignKey:QuestionID,constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 func (Question) TableName() string {

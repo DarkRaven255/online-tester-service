@@ -1,44 +1,28 @@
 package config
 
 import (
-	"github.com/spf13/viper"
+	"fmt"
+
+	v "github.com/spf13/viper"
 )
 
 type Config struct {
-	DB database `json:"db"`
-}
-
-type database struct {
-	Host     string `json:"host"`
-	User     string `json:"user"`
-	Password string `json:"password"`
-	Dbname   string `json:"database"`
-	Port     int    `json:"port"`
+	DbAccess string
+	Port     string
 }
 
 var Cfg Config
 
 func LoadConfig() error {
-	viper.SetConfigName("config")
-	viper.SetConfigType("json")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
-	if err != nil {
-		return err
+	v.AutomaticEnv()
+	Cfg.Port = v.GetString("PORT")
+
+	if v.GetString("ENV") == "dev" {
+		Cfg.DbAccess = fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			v.GetString("HOST"), v.GetString("DBPORT"), v.GetString("USER"), v.GetString("PASSWORD"), v.GetString("DBNAME"))
+	} else {
+		Cfg.DbAccess = v.GetString("DATABASE_URL")
 	}
 
-	postgresConfig := &database{}
-
-	err = viper.Unmarshal(&postgresConfig)
-	if err != nil {
-		return err
-	}
-
-	viper.Set("db", postgresConfig)
-
-	err = viper.Unmarshal(&Cfg)
-	if err != nil {
-		return err
-	}
 	return nil
 }

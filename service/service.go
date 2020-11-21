@@ -11,7 +11,7 @@ type testsService struct {
 	testsRepo domain.TestsRepository
 }
 
-func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
+func (es *testsService) AddTest(cmd *command.AddTestCmd) (string, error) {
 	var (
 		err  error
 		test = domainmodel.NewTestModel(cmd)
@@ -19,7 +19,7 @@ func (es *testsService) AddTest(cmd *command.AddTestCmd) error {
 
 	err = es.testsRepo.Create(&test)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	return test.TestCode, nil

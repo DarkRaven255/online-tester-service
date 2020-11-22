@@ -11,9 +11,9 @@ type Question struct {
 	UpdatedAt time.Time  `json:"updatedAt"`
 	DeletedAt *time.Time `json:"-" sql:"index"`
 	Question  string     `json:"question"`
-	Required  bool       `json:"-"`
+	Required  bool       `json:"required"`
 	TestID    uint64     `json:"-"`
-	Answers   []Answer   `json:"answers" gorm:"foreignKey:QuestionID"`
+	Answers   []Answer   `json:"answers" gorm:"foreignKey:QuestionID,constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 }
 
 func (Question) TableName() string {

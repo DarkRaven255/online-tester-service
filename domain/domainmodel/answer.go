@@ -11,8 +11,8 @@ type Answer struct {
 	UpdatedAt  time.Time  `json:"updatedAt"`
 	DeletedAt  *time.Time `json:"-" sql:"index"`
 	Answer     string     `json:"answer"`
-	Correct    bool       `json:"-"`
-	QuestionID uint64     `json:"questionID"`
+	Correct    bool       `json:"correct"`
+	QuestionID uint64     `json:"-"`
 }
 
 func (Answer) TableName() string {

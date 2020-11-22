@@ -15,9 +15,12 @@ type ResponseError struct {
 	Message string `json:"message"`
 }
 
-type ResponseResult struct {
-	Message string `json:"message"`
-	Success bool   `json:"success"`
+type ResponseTestCode struct {
+	TestCode string `json:"testCode"`
+}
+
+type ResponseStatus struct {
+	Status string `json:"status"`
 }
 
 type server struct {
@@ -28,25 +31,9 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	handler := &server{
 		app,
 	}
-	e.GET("/test/:id", handler.GetTest)
 	e.POST("/test", handler.AddTest)
-}
-
-func (s *server) GetTest(c echo.Context) error {
-	var (
-		err      error
-		testUUID string
-	)
-
-	testUUID = c.Param("id")
-
-	resp, err := s.TestsService.GetTest(testUUID)
-
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
-	}
-
-	return c.JSON(http.StatusOK, resp)
+	e.GET("/test/:code", handler.GetTest)
+	e.DELETE("/test/:code", handler.DeleteTest)
 }
 
 func (s *server) AddTest(c echo.Context) error {
@@ -56,16 +43,50 @@ func (s *server) AddTest(c echo.Context) error {
 	err = c.Bind(&cmd)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, err.Error())
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
 	}
 
-	err = s.TestsService.AddTest(&cmd)
+	testCode, err := s.TestsService.AddTest(&cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
 	}
 
-	return c.String(http.StatusOK, "ok")
+	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: testCode})
+}
+
+func (s *server) GetTest(c echo.Context) error {
+	var (
+		err      error
+		testCode string
+	)
+
+	testCode = c.Param("code")
+
+	resp, err := s.TestsService.GetTest(testCode)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, resp)
+}
+
+func (s *server) DeleteTest(c echo.Context) error {
+	var (
+		err      error
+		testCode string
+	)
+
+	testCode = c.Param("code")
+
+	err = s.TestsService.DeleteTest(testCode)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponseStatus{Status: "ok"})
 }
 
 func getStatusCode(err error) int {

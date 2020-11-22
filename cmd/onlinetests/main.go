@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"online-tests/app"
 	"online-tests/config"
@@ -53,7 +52,7 @@ func main() {
 
 	http.NewHandler(e, a)
 
-	log.Fatal(e.Start(":8081"))
+	log.Fatal(e.Start(":" + config.Cfg.Port))
 }
 
 func init() {
@@ -66,15 +65,10 @@ func init() {
 }
 
 func initPostgres() *gorm.DB {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
-		"password=%s dbname=%s sslmode=disable",
-		config.Cfg.DB.Host, config.Cfg.DB.Port, config.Cfg.DB.User, config.Cfg.DB.Password, config.Cfg.DB.Dbname)
-	log.Printf("connecting to PostgreSQL: host=%s, port=%d, user=%s, db=%s, pass=XXXX  \n", config.Cfg.DB.Host, config.Cfg.DB.Port, config.Cfg.DB.User, config.Cfg.DB.Dbname)
-	db, err := gorm.Open("postgres", psqlInfo)
+	db, err := gorm.Open("postgres", config.Cfg.DbAccess)
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	return migrate(db)
 }
 

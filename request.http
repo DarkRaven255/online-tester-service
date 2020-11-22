@@ -85,11 +85,9 @@ Content-Type: application/json
    }
 }
 
-###
-GET {{host}}/test/JUcqdMrP
 
 ###
-DELETE {{host}}/test/oy1bLSqI
+DELETE {{host}}/test/7DB5KGvB
 
 ###
 POST {{host}}/test
@@ -112,6 +110,14 @@ Content-Type: application/json
                {
                   "answer":"no",
                   "correct":true
+               },
+               {
+                  "answer":"yes",
+                  "correct":false
+               },
+               {
+                  "answer":"no",
+                  "correct":true
                }
             ]
          }
@@ -120,13 +126,17 @@ Content-Type: application/json
 }
 
 ###
-PATCH {{host}}/test/JUcqdMrP
+GET {{host}}/test/T4MydRUN
+
+
+###
+PATCH {{host}}/test/aZxIDmno
 Content-Type: application/json
 
 {
    "test":{
       "id": 1,
-      "title": "Second test",
+      "title": " -.- test",
       "userID":331,
       "numOfQuestions":5,
       "questions":[
@@ -144,6 +154,11 @@ Content-Type: application/json
                   "id": 2,
                   "answer":"nope",
                   "correct":false
+               },
+               {
+                  "id": null,
+                  "answer":"nopxDe",
+                  "correct":true
                }
             ]
          }

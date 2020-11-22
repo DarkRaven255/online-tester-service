@@ -14,11 +14,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/sirupsen/logrus"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var postgresDB *gorm.DB
@@ -32,7 +32,7 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{"*"},
 	}))
-	defer postgresDB.Close()
+	// defer postgresDB.Close()
 
 	go func() {
 		c := make(chan os.Signal)
@@ -65,7 +65,7 @@ func init() {
 }
 
 func initPostgres() *gorm.DB {
-	db, err := gorm.Open("postgres", config.Cfg.DbAccess)
+	db, err := gorm.Open(postgres.Open(config.Cfg.DbAccess), &gorm.Config{})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -73,15 +73,13 @@ func initPostgres() *gorm.DB {
 }
 
 func migrate(db *gorm.DB) *gorm.DB {
-	// db.AutoMigrate(&model.User{})
-
 	// db.AutoMigrate(&model.Results{})
 	// db.Model(&model.Results{}).AddForeignKey("test_id", "onlinetests.tests(id)", "CASCADE", "CASCADE")
 	// db.Model(&model.Results{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
-	db.AutoMigrate(&domainmodel.Test{})
-	// db.Model(&model.Test{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
-	db.AutoMigrate(&domainmodel.Question{})
+
 	db.AutoMigrate(&domainmodel.Answer{})
+	db.AutoMigrate(&domainmodel.Question{})
+	db.AutoMigrate(&domainmodel.Test{})
 
 	return db
 }

@@ -3,16 +3,18 @@ package domainmodel
 import (
 	"online-tests/delivery/command/cmdmodel"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Answer struct {
-	ID         uint64     `json:"id" gorm:"primary_key"`
-	CreatedAt  time.Time  `json:"-"`
-	UpdatedAt  time.Time  `json:"updatedAt"`
-	DeletedAt  *time.Time `json:"-" sql:"index"`
-	Answer     string     `json:"answer"`
-	Correct    bool       `json:"correct"`
-	QuestionID uint64     `json:"-"`
+	ID         uint64         `json:"id" gorm:"primary_key"`
+	CreatedAt  time.Time      `json:"-"`
+	UpdatedAt  time.Time      `json:"updatedAt"`
+	DeletedAt  gorm.DeletedAt `json:"-" sql:"index"`
+	Answer     string         `json:"answer"`
+	Correct    bool           `json:"correct"`
+	QuestionID uint64         `json:"-"`
 }
 
 func (Answer) TableName() string {

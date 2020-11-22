@@ -33,12 +33,16 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	}
 	e.POST("/test", handler.AddTest)
 	e.GET("/test/:code", handler.GetTest)
+	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
 }
 
 func (s *server) AddTest(c echo.Context) error {
-	var err error
-	cmd := command.AddTestCmd{}
+	var (
+		err      error
+		testCode string
+		cmd      command.TestCmd
+	)
 
 	err = c.Bind(&cmd)
 
@@ -46,7 +50,7 @@ func (s *server) AddTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
 	}
 
-	testCode, err := s.TestsService.AddTest(&cmd)
+	testCode, err = s.TestsService.AddTest(&cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
@@ -58,18 +62,38 @@ func (s *server) AddTest(c echo.Context) error {
 func (s *server) GetTest(c echo.Context) error {
 	var (
 		err      error
-		testCode string
+		testCode = c.Param("code")
 	)
 
-	testCode = c.Param("code")
-
-	resp, err := s.TestsService.GetTest(testCode)
+	resp, err := s.TestsService.GetTest(&testCode)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+func (s *server) EditTest(c echo.Context) error {
+	var (
+		err      error
+		testCode = c.Param("code")
+		cmd      command.TestCmd
+	)
+
+	err = c.Bind(&cmd)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+	}
+
+	err = s.TestsService.EditTest(&cmd, &testCode)
+
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponseStatus{Status: "ok"})
 }
 
 func (s *server) DeleteTest(c echo.Context) error {
@@ -80,7 +104,7 @@ func (s *server) DeleteTest(c echo.Context) error {
 
 	testCode = c.Param("code")
 
-	err = s.TestsService.DeleteTest(testCode)
+	err = s.TestsService.DeleteTest(&testCode)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})

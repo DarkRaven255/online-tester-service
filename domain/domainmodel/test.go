@@ -15,20 +15,31 @@ type Test struct {
 	UserID         uint64     `json:"userID"`
 	NumOfQuestions uint       `json:"numOfQuestions"`
 	TestCode       string     `json:"testCode" qorm:"unique"`
-	Questions      []Question `json:"questions" gorm:"foreignKey:TestID,constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Questions      []Question `json:"questions" gorm:"foreignKey:TestID,constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 
 func (Test) TableName() string {
 	return "onlinetests.tests"
 }
 
-func NewTestModel(cmd *command.AddTestCmd) Test {
+func NewTestModel(cmd *command.TestCmd) Test {
 	tCode := utils.RandomCode(8)
 	return Test{
 		Title:          cmd.Test.Title,
 		UserID:         cmd.Test.UserID,
 		NumOfQuestions: cmd.Test.NumOfQuestions,
 		TestCode:       tCode,
-		Questions:      *NewQuestionsArray(&cmd.Test.Questions),
+		Questions:      *NewQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
+	}
+}
+
+func NewEditTestModel(cmd *command.TestCmd) Test {
+	return Test{
+		ID:             cmd.Test.ID,
+		Title:          cmd.Test.Title,
+		UserID:         cmd.Test.UserID,
+		NumOfQuestions: cmd.Test.NumOfQuestions,
+		TestCode:       cmd.Test.TestCode,
+		Questions:      *NewQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }

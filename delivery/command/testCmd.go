@@ -2,6 +2,6 @@ package command
 
 import "online-tests/delivery/command/cmdmodel"
 
-type AddTestCmd struct {
+type TestCmd struct {
 	Test cmdmodel.Test `json:"test"`
 }

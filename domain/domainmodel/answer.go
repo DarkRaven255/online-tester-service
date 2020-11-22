@@ -19,17 +19,19 @@ func (Answer) TableName() string {
 	return "onlinetests.answers"
 }
 
-func NewAnswer(a *cmdmodel.Answer) *Answer {
+func NewAnswer(a *cmdmodel.Answer, qID uint64) *Answer {
 	return &Answer{
-		Answer:  a.Answer,
-		Correct: a.Correct,
+		ID:         a.ID,
+		Answer:     a.Answer,
+		Correct:    a.Correct,
+		QuestionID: qID,
 	}
 }
 
-func NewAnswerArray(aArr *[]cmdmodel.Answer) *[]Answer {
+func NewAnswerArray(aArr *[]cmdmodel.Answer, qID uint64) *[]Answer {
 	answers := []Answer{}
 	for _, a := range *aArr {
-		answers = append(answers, *NewAnswer(&a))
+		answers = append(answers, *NewAnswer(&a, qID))
 	}
 
 	return &answers

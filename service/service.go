@@ -11,7 +11,7 @@ type testsService struct {
 	testsRepo domain.TestsRepository
 }
 
-func (es *testsService) AddTest(cmd *command.AddTestCmd) (string, error) {
+func (es *testsService) AddTest(cmd *command.TestCmd) (string, error) {
 	var (
 		err  error
 		test = domainmodel.NewTestModel(cmd)
@@ -25,10 +25,10 @@ func (es *testsService) AddTest(cmd *command.AddTestCmd) (string, error) {
 	return test.TestCode, nil
 }
 
-func (es *testsService) GetTest(testCode string) (*response.GetTestResp, error) {
+func (es *testsService) GetTest(testCode *string) (*response.GetTestResp, error) {
 	var err error
 
-	result, err := es.testsRepo.GetByID(testCode)
+	result, err := es.testsRepo.GetByTestCode(testCode)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,21 @@ func (es *testsService) GetTest(testCode string) (*response.GetTestResp, error) 
 	return response.NewGetTestResponse(result), nil
 }
 
-func (es *testsService) DeleteTest(testCode string) error {
+func (es *testsService) EditTest(cmd *command.TestCmd, testCode *string) error {
+	var (
+		err  error
+		test = domainmodel.NewEditTestModel(cmd)
+	)
+
+	err = es.testsRepo.EditTestByTestCode(&test, testCode)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (es *testsService) DeleteTest(testCode *string) error {
 	var err error
 
 	err = es.testsRepo.Delete(testCode)

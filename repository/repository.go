@@ -4,7 +4,7 @@ import (
 	"online-tests/domain"
 	"online-tests/domain/domainmodel"
 
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type repository struct {
@@ -12,53 +12,82 @@ type repository struct {
 }
 
 func (r *repository) Create(entry *domainmodel.Test) error {
-	errs := r.db.Create(&entry).GetErrors()
 
-	if len(errs) > 0 {
-		return errs[0]
+	err := r.db.Create(&entry).Error
+
+	if err != nil {
+		return err
 	}
 
-	errs = r.db.Save(&entry).GetErrors()
+	err = r.db.Save(&entry).Error
 
-	if len(errs) > 0 {
-		return errs[0]
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func (r *repository) GetByTestCode(testCode *string) (*domainmodel.Test, error) {
-	var entry domainmodel.Test
-	errs := r.db.Preload("Questions").Preload("Questions.Answers").Where("test_code = ?", testCode).First(&entry).GetErrors()
 
-	if len(errs) > 0 {
-		return &entry, errs[0]
+	var entry domainmodel.Test
+	err := r.db.Preload("Questions.Answers").Preload("Questions").Where("test_code = ?", testCode).First(&entry).Error
+
+	if err != nil {
+		return nil, err
 	}
 	return &entry, nil
 }
-
 func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
 
-	errs := r.db.Model(&domainmodel.Test{}).Updates(entry).GetErrors()
+	for _, question := range entry.Questions {
+		err := r.db.Debug().Model(&question).Association("Answers").Replace(&question.Answers)
 
-	if len(errs) > 0 {
-		return errs[0]
+		if err != nil {
+			return err
+		}
+	}
+
+	err := r.db.Debug().Model(&entry).Association("Questions").Replace(&entry.Questions)
+
+	if err != nil {
+		return err
+	}
+
+	err = r.db.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Where("test_code = ?", testCode).Updates(&entry).Error
+
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func (r *repository) Delete(testCode *string) error {
-	errs := r.db.Select("Questions").Select("Questions.Answers").Where("test_code = ?", testCode).Delete(domainmodel.Test{}).GetErrors()
 
-	if len(errs) > 0 {
-		return errs[0]
+	deleteEntry, err := r.GetByTestCode(testCode)
+
+	if err != nil {
+		return err
+	}
+
+	err = r.db.Select("Answers").Delete(&deleteEntry.Questions).Error
+
+	if err != nil {
+		return err
+	}
+
+	err = r.db.Delete(&deleteEntry).Error
+
+	if err != nil {
+		return err
 	}
 
 	return nil
 }
 
 func NewEntryRepository(dbConn *gorm.DB) domain.TestsRepository {
+
 	return &repository{
 		db: dbConn,
 	}

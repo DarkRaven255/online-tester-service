@@ -14,6 +14,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-playground/validator"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
 	"github.com/sirupsen/logrus"
@@ -21,18 +22,22 @@ import (
 	"gorm.io/gorm"
 )
 
+type CustomValidator struct {
+	validator *validator.Validate
+}
+
 var postgresDB *gorm.DB
 
 func main() {
 
 	e := echo.New()
+	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 		AllowMethods: []string{"*"},
 	}))
-	// defer postgresDB.Close()
 
 	go func() {
 		c := make(chan os.Signal)
@@ -82,4 +87,8 @@ func migrate(db *gorm.DB) *gorm.DB {
 	db.AutoMigrate(&domainmodel.Test{})
 
 	return db
+}
+
+func (cv *CustomValidator) Validate(i interface{}) error {
+	return cv.validator.Struct(i)
 }

@@ -50,7 +50,6 @@ Content-Type: application/json
 {
    "test":{
       "title": "Second test",
-      "userID":331,
       "numOfQuestions":5,
       "questions":[
          {
@@ -126,11 +125,14 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/T4MydRUN
+GET {{host}}/test/h1QGS11l
+
+###
+GET {{host}}/test/check/h1QfGS11l
 
 
 ###
-PATCH {{host}}/test/aZxIDmno
+PATCH {{host}}/test/wEZOarfg
 Content-Type: application/json
 
 {
@@ -154,11 +156,6 @@ Content-Type: application/json
                   "id": 2,
                   "answer":"nope",
                   "correct":false
-               },
-               {
-                  "id": null,
-                  "answer":"nopxDe",
-                  "correct":true
                }
             ]
          }

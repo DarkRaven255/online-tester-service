@@ -1,7 +1,7 @@
 package domainmodel
 
 import (
-	"online-tests/delivery/command"
+	"online-tests/delivery/commands"
 	"online-tests/utils"
 	"time"
 
@@ -23,21 +23,21 @@ func (Test) TableName() string {
 	return "onlinetests.tests"
 }
 
-func NewTestModel(cmd *command.TestCmd) Test {
+func NewTestModel(cmd *commands.TestCmd) Test {
 	tCode := utils.RandomCode(8)
 	return Test{
 		Title:              cmd.Test.Title,
 		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
 		TestCode:           tCode,
-		Questions:          *NewQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
+		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }
 
-func NewEditTestModel(cmd *command.TestCmd) Test {
+func NewEditTestModel(cmd *commands.TestCmd) Test {
 	return Test{
 		ID:                 cmd.Test.ID,
 		Title:              cmd.Test.Title,
 		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
-		Questions:          *NewQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
+		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }

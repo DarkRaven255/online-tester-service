@@ -3,7 +3,7 @@ package http
 import (
 	"net/http"
 	"online-tests/app"
-	"online-tests/delivery/command"
+	"online-tests/delivery/commands"
 	"online-tests/domain"
 
 	"github.com/jinzhu/gorm"
@@ -35,13 +35,16 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	e.GET("/test/:code", handler.GetTest)
 	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
+
+	e.GET("/test/solve/:code", handler.GetTestSolve)
+	// e.POST("/test/solve/:code", handler.AddTestSolve)
 }
 
 func (s *server) AddTest(c echo.Context) error {
 	var (
 		err      error
 		testCode string
-		cmd      command.TestCmd
+		cmd      commands.TestCmd
 	)
 
 	err = c.Bind(&cmd)
@@ -78,7 +81,7 @@ func (s *server) EditTest(c echo.Context) error {
 	var (
 		err      error
 		testCode = c.Param("code")
-		cmd      command.TestCmd
+		cmd      commands.TestCmd
 	)
 
 	err = c.Bind(&cmd)
@@ -111,6 +114,21 @@ func (s *server) DeleteTest(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, ResponseStatus{Status: "ok"})
+}
+
+func (s *server) GetTestSolve(c echo.Context) error {
+	var (
+		err      error
+		testCode = c.Param("code")
+	)
+
+	resp, err := s.TestsService.GetTestSolve(&testCode)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, resp)
 }
 
 func getStatusCode(err error) int {

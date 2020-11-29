@@ -1,4 +1,4 @@
-package cmdmodel
+package testmodel
 
 type Test struct {
 	ID                 uint64     `json:"id"`
@@ -7,3 +7,11 @@ type Test struct {
 	Questions          []Question `json:"questions"`
 	Randomize          bool       `json:"randomize"`
 }
+
+// func newTestModel(domainTest *domainmodel.Test) *Test {
+// 	return &Test{
+// 		ID:        domainTest.ID,
+// 		Title:     domainTest.Title,
+// 		Questions: *newTestQuestionsArray(&domainTest.Questions, domainTest.NumTestOfQuestions, domainTest.ID),
+// 	}
+// }

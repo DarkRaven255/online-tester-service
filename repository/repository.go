@@ -41,20 +41,20 @@ func (r *repository) GetByTestCode(testCode *string) (*domainmodel.Test, error) 
 func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
 
 	for _, question := range entry.Questions {
-		err := r.db.Debug().Model(&question).Association("Answers").Replace(&question.Answers)
+		err := r.db.Model(&question).Association("Answers").Replace(&question.Answers)
 
 		if err != nil {
 			return err
 		}
 	}
 
-	err := r.db.Debug().Model(&entry).Association("Questions").Replace(&entry.Questions)
+	err := r.db.Model(&entry).Association("Questions").Replace(&entry.Questions)
 
 	if err != nil {
 		return err
 	}
 
-	err = r.db.Debug().Session(&gorm.Session{FullSaveAssociations: true}).Where("test_code = ?", testCode).Updates(&entry).Error
+	err = r.db.Session(&gorm.Session{FullSaveAssociations: true}).Where("test_code = ?", testCode).Updates(&entry).Error
 
 	if err != nil {
 		return err

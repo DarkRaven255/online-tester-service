@@ -1,7 +1,7 @@
 package domainmodel
 
 import (
-	"online-tests/delivery/command/cmdmodel"
+	"online-tests/delivery/models/testmodel"
 	"time"
 
 	"gorm.io/gorm"
@@ -22,20 +22,20 @@ func (Question) TableName() string {
 	return "onlinetests.questions"
 }
 
-func NewQuestion(q *cmdmodel.Question, tID uint64) *Question {
+func newQuestion(q *testmodel.Question, tID uint64) *Question {
 	return &Question{
 		ID:       q.ID,
 		Question: q.Question,
 		Required: q.Required,
-		Answers:  *NewAnswerArray(&q.Answer, q.ID),
+		Answers:  *newAnswerArray(&q.Answers, q.ID),
 		TestID:   tID,
 	}
 }
 
-func NewQuestionsArray(qArr *[]cmdmodel.Question, tID uint64) *[]Question {
+func newQuestionsArray(qArr *[]testmodel.Question, tID uint64) *[]Question {
 	questions := []Question{}
 	for _, q := range *qArr {
-		questions = append(questions, *NewQuestion(&q, tID))
+		questions = append(questions, *newQuestion(&q, tID))
 	}
 
 	return &questions

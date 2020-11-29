@@ -125,7 +125,10 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/wEZOarfg
+GET {{host}}/test/h1QGS11l
+
+###
+GET {{host}}/test/check/h1QfGS11l
 
 
 ###

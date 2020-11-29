@@ -11,16 +11,12 @@ import (
 	"github.com/labstack/gommon/log"
 )
 
-type ResponseError struct {
+type ResponseMessage struct {
 	Message string `json:"message"`
 }
 
 type ResponseTestCode struct {
 	TestCode string `json:"testCode"`
-}
-
-type ResponseStatus struct {
-	Status string `json:"status"`
 }
 
 type server struct {
@@ -36,6 +32,7 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
 
+	e.GET("/test/check/:code", handler.CheckIsTest)
 	e.GET("/test/solve/:code", handler.GetTestSolve)
 	// e.POST("/test/solve/:code", handler.AddTestSolve)
 }
@@ -50,13 +47,13 @@ func (s *server) AddTest(c echo.Context) error {
 	err = c.Bind(&cmd)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
 	testCode, err = s.TestsService.AddTest(&cmd)
 
 	if err != nil {
-		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: testCode})
@@ -71,7 +68,7 @@ func (s *server) GetTest(c echo.Context) error {
 	resp, err := s.TestsService.GetTest(&testCode)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -87,16 +84,16 @@ func (s *server) EditTest(c echo.Context) error {
 	err = c.Bind(&cmd)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
 	err = s.TestsService.EditTest(&cmd, &testCode)
 
 	if err != nil {
-		return c.JSON(getStatusCode(err), ResponseError{Message: err.Error()})
+		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResponseStatus{Status: "ok"})
+	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
 }
 
 func (s *server) DeleteTest(c echo.Context) error {
@@ -110,10 +107,25 @@ func (s *server) DeleteTest(c echo.Context) error {
 	err = s.TestsService.DeleteTest(&testCode)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResponseStatus{Status: "ok"})
+	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
+}
+
+func (s *server) CheckIsTest(c echo.Context) error {
+	var (
+		err      error
+		testCode = c.Param("code")
+	)
+
+	_, err = s.TestsService.GetTest(&testCode)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
 }
 
 func (s *server) GetTestSolve(c echo.Context) error {
@@ -125,7 +137,7 @@ func (s *server) GetTestSolve(c echo.Context) error {
 	resp, err := s.TestsService.GetTestSolve(&testCode)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseError{Message: err.Error()})
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, resp)

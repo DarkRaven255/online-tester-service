@@ -78,12 +78,9 @@ func initPostgres() *gorm.DB {
 }
 
 func migrate(db *gorm.DB) *gorm.DB {
-	// db.AutoMigrate(&model.Results{})
-	// db.Model(&model.Results{}).AddForeignKey("test_id", "onlinetests.tests(id)", "CASCADE", "CASCADE")
-	// db.Model(&model.Results{}).AddForeignKey("user_id", "onlinetests.users(id)", "CASCADE", "CASCADE")
-
 	db.AutoMigrate(&domainmodel.Answer{})
 	db.AutoMigrate(&domainmodel.Question{})
+	db.AutoMigrate(&domainmodel.Result{})
 	db.AutoMigrate(&domainmodel.Test{})
 
 	return db

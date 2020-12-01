@@ -5,6 +5,7 @@ import (
 	"online-tests/delivery/responses"
 	"online-tests/domain"
 	"online-tests/domain/domainmodel"
+	"time"
 )
 
 type testsService struct {
@@ -61,15 +62,17 @@ func (es *testsService) DeleteTest(testCode *string) error {
 	return nil
 }
 
-func (es *testsService) GetTestSolve(testCode *string) (*responses.TestSolveModel, error) {
-	var err error
+func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, *time.Time, *string, error) {
 
-	result, err := es.testsRepo.GetByTestCode(testCode)
+	tm, err := es.testsRepo.GetByTestCode(testCode)
 	if err != nil {
-		return nil, err
+		return nil, nil, nil, err
 	}
 
-	return responses.NewTestSolveModelResp(result), nil
+	rm := domainmodel.NewResultModel(cmd, tm.ID)
+	err = es.testsRepo.AddResult(tm, rm)
+
+	return responses.NewTestSolveModelResp(tm), &rm.UpdatedAt, &rm.ResultUUID, nil
 }
 
 func NewTestService(er domain.TestsRepository) domain.TestsService {

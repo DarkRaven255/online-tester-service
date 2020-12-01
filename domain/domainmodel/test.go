@@ -17,6 +17,7 @@ type Test struct {
 	NumTestOfQuestions uint           `json:"numOfTestQuestions"`
 	TestCode           string         `json:"testCode" qorm:"unique"`
 	Questions          []Question     `json:"questions" gorm:"foreignKey:TestID"`
+	Results            []Result       `json:"-" gorm:"foreignKey:TestID"`
 }
 
 func (Test) TableName() string {

@@ -72,7 +72,7 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 	rm := domainmodel.NewResultModel(cmd, tm.ID)
 	err = es.testsRepo.AddResult(tm, rm)
 
-	return responses.NewTestSolveModelResp(tm), &rm.UpdatedAt, &rm.ResultUUID, nil
+	return responses.NewTestSolveModelResp(tm), &rm.CreatedAt, &rm.ResultUUID, nil
 }
 
 func NewTestService(er domain.TestsRepository) domain.TestsService {

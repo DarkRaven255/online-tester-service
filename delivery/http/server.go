@@ -141,7 +141,7 @@ func (s *server) StartTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	resp, updatedAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
+	resp, createdAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
@@ -150,7 +150,10 @@ func (s *server) StartTest(c echo.Context) error {
 	cookie := new(http.Cookie)
 	cookie.Name = "resultUUID"
 	cookie.Value = *resultUUID
-	cookie.Expires = updatedAt.Add(15 * time.Minute) //TODO: add option to change time
+	cookie.Expires = createdAt.Add(75 * time.Minute) //TODO: add option to change time and fix for timezone to use UTC everywhere except cookies
+	cookie.SameSite = http.SameSiteNoneMode
+	cookie.Secure = true
+	cookie.Domain = "web.app"
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})

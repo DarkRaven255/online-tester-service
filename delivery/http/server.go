@@ -5,6 +5,7 @@ import (
 	"online-tests/app"
 	"online-tests/delivery/commands"
 	"online-tests/domain"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
@@ -33,8 +34,8 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	e.DELETE("/test/:code", handler.DeleteTest)
 
 	e.GET("/test/check/:code", handler.CheckIsTest)
-	e.GET("/test/solve/:code", handler.GetTestSolve)
-	// e.POST("/test/solve/:code", handler.AddTestSolve)
+	e.POST("/test/start/:code", handler.StartTest)
+	// e.POST("/test/save/:code", handler.AddTestSolve)
 }
 
 func (s *server) AddTest(c echo.Context) error {
@@ -128,17 +129,34 @@ func (s *server) CheckIsTest(c echo.Context) error {
 	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
 }
 
-func (s *server) GetTestSolve(c echo.Context) error {
+func (s *server) StartTest(c echo.Context) error {
 	var (
 		err      error
 		testCode = c.Param("code")
+		cmd      commands.StartTestCmd
 	)
 
-	resp, err := s.TestsService.GetTestSolve(&testCode)
+	err = c.Bind(&cmd)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	resp, updatedAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
+
+	cookie := new(http.Cookie)
+	cookie.Name = "resultUUID"
+	cookie.Value = *resultUUID
+	cookie.Expires = updatedAt.Add(15 * time.Minute) //TODO: add option to change time
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	c.SetCookie(cookie)
 
 	return c.JSON(http.StatusOK, resp)
 }

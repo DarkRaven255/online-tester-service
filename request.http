@@ -125,10 +125,22 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/h1QGS11l
+GET {{host}}/test/vzQ8tOli
 
 ###
-GET {{host}}/test/check/h1QfGS11l
+GET {{host}}/test/check/vzQ8tOli
+
+###
+POST {{host}}/test/start/vzQ8tOli
+Content-Type: application/json
+
+{
+   "result":{
+      "firstName":"Jan",
+      "lastName":"Dzban",
+      "email":"xd@gmail.com"
+   }
+}
 
 
 ###

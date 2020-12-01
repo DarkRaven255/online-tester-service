@@ -9,16 +9,16 @@ import (
 )
 
 type Result struct {
-	ID         uint64         `json:"id" gorm:"primary_key"`
-	ResultUUID string         `json:"resultUUID" qorm:"unique"`
-	CreatedAt  time.Time      `json:"-"`
-	UpdatedAt  time.Time      `json:"updatedAt"`
-	DeletedAt  gorm.DeletedAt `json:"-" sql:"index"`
-	FirstName  string         `json:"firstName"`
-	LastName   string         `json:"lastName"`
-	Email      string         `json:"email"`
-	Result     float32        `json:"result"`
-	TestID     uint64         `json:"-"`
+	ID         uint64 `gorm:"primary_key"`
+	ResultUUID string `qorm:"unique"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  gorm.DeletedAt `sql:"index"`
+	FirstName  string
+	LastName   string
+	Email      string
+	Result     float32
+	TestID     uint64
 }
 
 func (Result) TableName() string {

@@ -11,11 +11,11 @@ type TestSolveModel struct {
 
 func NewTestSolveModelResp(test *domainmodel.Test) *TestSolveModel {
 	return &TestSolveModel{
-		Test: NewTestSolveModel(test),
+		Test: newTestSolveModel(test),
 	}
 }
 
-func NewTestSolveModel(domainTest *domainmodel.Test) *testsolvemodel.Test {
+func newTestSolveModel(domainTest *domainmodel.Test) *testsolvemodel.Test {
 	return &testsolvemodel.Test{
 		ID:        domainTest.ID,
 		Title:     domainTest.Title,

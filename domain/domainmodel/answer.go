@@ -8,13 +8,13 @@ import (
 )
 
 type Answer struct {
-	ID         uint64         `json:"id" gorm:"primary_key"`
-	CreatedAt  time.Time      `json:"-"`
-	UpdatedAt  time.Time      `json:"updatedAt"`
-	DeletedAt  gorm.DeletedAt `json:"-" sql:"index"`
-	Answer     string         `json:"answer"`
-	Correct    bool           `json:"correct"`
-	QuestionID uint64         `json:"-"`
+	ID         uint64 `gorm:"primary_key"`
+	CreatedAt  time.Time
+	UpdatedAt  time.Time
+	DeletedAt  gorm.DeletedAt `sql:"index"`
+	Answer     string
+	Correct    bool
+	QuestionID uint64
 }
 
 func (Answer) TableName() string {

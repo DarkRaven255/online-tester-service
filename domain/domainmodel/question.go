@@ -8,14 +8,14 @@ import (
 )
 
 type Question struct {
-	ID        uint64         `json:"id" gorm:"primary_key"`
-	CreatedAt time.Time      `json:"-"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"-" sql:"index"`
-	Question  string         `json:"question"`
-	Required  bool           `json:"required"`
-	TestID    uint64         `json:"-"`
-	Answers   []Answer       `json:"answers" gorm:"foreignKey:QuestionID"`
+	ID        uint64 `gorm:"primary_key"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `sql:"index"`
+	Question  string
+	Required  bool
+	TestID    uint64
+	Answers   []Answer `gorm:"foreignKey:QuestionID"`
 }
 
 func (Question) TableName() string {

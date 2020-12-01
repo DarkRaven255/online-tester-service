@@ -86,6 +86,23 @@ func (r *repository) Delete(testCode *string) error {
 	return nil
 }
 
+func (r *repository) AddResult(entry *domainmodel.Test, result *domainmodel.Result) error {
+
+	err := r.db.Create(&result).Error
+
+	if err != nil {
+		return err
+	}
+
+	err = r.db.Save(&result).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewEntryRepository(dbConn *gorm.DB) domain.TestsRepository {
 
 	return &repository{

@@ -125,13 +125,13 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/vzQ8tOli
+GET {{host}}/test/LNlKecNv
 
 ###
-GET {{host}}/test/check/vzQ8tOli
+GET {{host}}/test/check/LNlKecNv
 
 ###
-POST {{host}}/test/start/vzQ8tOli
+POST {{host}}/test/start/LNlKecNv
 Content-Type: application/json
 
 {
@@ -144,33 +144,70 @@ Content-Type: application/json
 
 
 ###
-PATCH {{host}}/test/wEZOarfg
+PATCH {{host}}/test/aVdmt2G8
 Content-Type: application/json
 
 {
    "test":{
-      "id": 1,
+      "id": 2,
       "title": " -.- test",
       "userID":331,
       "numOfQuestions":5,
       "questions":[
          {
-            "id": 1,
+            "id": 3,
             "question":"Is it good enough??",
             "required": true,
             "answers":[
                {
-                  "id": 1,
+                  "id": 6,
                   "answer":"si",
                   "correct":false
                },
                {
-                  "id": 2,
+                  "id": 6,
                   "answer":"nope",
+                  "correct":false
+               },
+               {
+                  "answer":"U MIE DZIALA wciąż",
                   "correct":false
                }
             ]
          }
       ]
    }
+}
+
+###
+POST {{host}}/test/save/LNlKecNv/ba6ef103-defe-425b-bb57-1d265953ffed
+Content-Type: application/json
+
+{
+  "test": {
+    "id": 3,
+    "questions": [
+      {
+        "id": 3,
+        "answers": [
+          {
+            "id": 9,
+            "checked": false
+          },
+          {
+            "id": 10,
+            "checked": true
+          },
+          {
+            "id": 11,
+            "checked": false
+          },
+          {
+            "id": 12,
+            "checked": true
+          }
+        ]
+      }
+    ]
+  }
 }

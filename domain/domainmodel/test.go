@@ -14,9 +14,11 @@ type Test struct {
 	UpdatedAt          time.Time
 	DeletedAt          gorm.DeletedAt `sql:"index"`
 	Title              string
-	NumTestOfQuestions uint
-	TestCode           string     `qorm:"unique"`
-	TestTime           int        `gorm:"default:20"`
+	Password           string
+	TestCode           string `qorm:"unique"`
+	NumOfTestQuestions uint
+	NumOfQuestions     uint
+	TestTime           uint       `gorm:"default:20"`
 	Questions          []Question `gorm:"foreignKey:TestID"`
 	Results            []Result   `gorm:"foreignKey:TestID"`
 }
@@ -29,9 +31,11 @@ func NewTestModel(cmd *commands.TestCmd) Test {
 	tCode := utils.RandomCode(8)
 	return Test{
 		Title:              cmd.Test.Title,
-		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
-		TestCode:           tCode,
+		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
+		NumOfQuestions:     cmd.Test.NumOfQuestions,
 		TestTime:           cmd.Test.TestTime,
+		Password:           cmd.Test.Password,
+		TestCode:           tCode,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }
@@ -40,7 +44,8 @@ func NewEditTestModel(cmd *commands.TestCmd) Test {
 	return Test{
 		ID:                 cmd.Test.ID,
 		Title:              cmd.Test.Title,
-		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
+		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
+		NumOfQuestions:     cmd.Test.NumOfQuestions,
 		TestTime:           cmd.Test.TestTime,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}

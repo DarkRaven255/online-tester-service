@@ -1,5 +1,5 @@
-@host = http://localhost:8080
-# @host = http://online-tests2137.herokuapp.com
+# @host = http://localhost:8080
+@host = http://online-tester-service.herokuapp.com
 
 ###
 POST {{host}}/test
@@ -127,13 +127,13 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/OdfN0X1x
+GET {{host}}/test/ZP5jgBka
 
 ###
 GET {{host}}/test/check/QTSAVjHn
 
 ###
-POST {{host}}/test/start/OdfN0X1x
+POST {{host}}/test/start/ZP5jgBka
 Content-Type: application/json
 
 {
@@ -183,31 +183,27 @@ Content-Type: application/json
 }
 
 ###
-POST {{host}}/test/save/LNlKecNv/ba6ef103-defe-425b-bb57-1d265953ffed
+POST {{host}}/test/save/ZP5jgBka/6362d260-ce2b-4d1c-ab45-6a453c102452
 Content-Type: application/json
 
 {
   "test": {
-    "id": 3,
+    "id": 39,
     "questions": [
       {
-        "id": 3,
+        "id": 46,
         "answers": [
           {
-            "id": 9,
-            "checked": false
-          },
-          {
-            "id": 10,
+            "id": 118,
             "checked": true
           },
           {
-            "id": 11,
+            "id": 119,
             "checked": false
           },
           {
-            "id": 12,
-            "checked": true
+            "id": 120,
+            "checked": false
           }
         ]
       }

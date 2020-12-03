@@ -96,7 +96,8 @@ Content-Type: application/json
    "test":{
       "title": "Epic test title",
       "userID":123,
-      "numOfQuestions":2,
+      "numOfTestQuestions":2,
+      "testTime": 10,
       "questions":[
          {
             "question":"to be or not to be?",
@@ -125,13 +126,13 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/LNlKecNv
+GET {{host}}/test/QTSAVjHn
 
 ###
-GET {{host}}/test/check/LNlKecNv
+GET {{host}}/test/check/QTSAVjHn
 
 ###
-POST {{host}}/test/start/LNlKecNv
+POST {{host}}/test/start/QTSAVjHn
 Content-Type: application/json
 
 {
@@ -144,28 +145,29 @@ Content-Type: application/json
 
 
 ###
-PATCH {{host}}/test/aVdmt2G8
+PATCH {{host}}/test/QTSAVjHn
 Content-Type: application/json
 
 {
    "test":{
-      "id": 2,
+      "id": 1,
       "title": " -.- test",
       "userID":331,
-      "numOfQuestions":5,
+      "numOfTestQuestions":5,
+      "testTime": 11,
       "questions":[
          {
-            "id": 3,
+            "id": 1,
             "question":"Is it good enough??",
             "required": true,
             "answers":[
                {
-                  "id": 6,
+                  "id": 1,
                   "answer":"si",
                   "correct":false
                },
                {
-                  "id": 6,
+                  "id": 2,
                   "answer":"nope",
                   "correct":false
                },

@@ -5,7 +5,6 @@ import (
 	"online-tests/delivery/responses"
 	"online-tests/domain"
 	"online-tests/domain/domainmodel"
-	"time"
 )
 
 type testsService struct {
@@ -69,12 +68,10 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 		return nil, err
 	}
 
-	rm := domainmodel.NewResultModel(cmd, tm.ID)
+	rm := domainmodel.NewResultModel(cmd, tm.ID, tm.TestTime)
 	err = es.testsRepo.AddResult(tm, rm)
 
-	finishedAt := rm.CreatedAt.Add(15 * time.Minute) //TODO: Add ability to set time manually
-
-	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &finishedAt), nil
+	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &rm.FinishedAt), nil
 }
 
 func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (score float32, err error) {

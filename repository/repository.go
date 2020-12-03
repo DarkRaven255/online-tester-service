@@ -38,8 +38,9 @@ func (r *repository) GetByTestCode(testCode *string) (*domainmodel.Test, error) 
 	}
 	return &entry, nil
 }
-func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
 
+func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
+	//TODO: Check if id can be set before save.
 	for _, question := range entry.Questions {
 		err := r.db.Model(&question).Association("Answers").Replace(&question.Answers)
 

@@ -16,6 +16,7 @@ type Test struct {
 	Title              string
 	NumTestOfQuestions uint
 	TestCode           string     `qorm:"unique"`
+	TestTime           int        `gorm:"default:20"`
 	Questions          []Question `gorm:"foreignKey:TestID"`
 	Results            []Result   `gorm:"foreignKey:TestID"`
 }
@@ -30,6 +31,7 @@ func NewTestModel(cmd *commands.TestCmd) Test {
 		Title:              cmd.Test.Title,
 		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
 		TestCode:           tCode,
+		TestTime:           cmd.Test.TestTime,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }
@@ -39,6 +41,7 @@ func NewEditTestModel(cmd *commands.TestCmd) Test {
 		ID:                 cmd.Test.ID,
 		Title:              cmd.Test.Title,
 		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
+		TestTime:           cmd.Test.TestTime,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }

@@ -9,7 +9,7 @@ import (
 type TestSolveModel struct {
 	Test       *testsolvemodel.Test `json:"test"`
 	ResultUUID *string              `json:"resultUUID"`
-	FinishedAt *time.Time           `json:"finishedAt"` //TODO: prepared for future finishedAt column in the db
+	FinishedAt *time.Time           `json:"finishedAt"`
 }
 
 func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *string, finishedAt *time.Time) *TestSolveModel {

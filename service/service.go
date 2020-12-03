@@ -17,7 +17,6 @@ func (es *testsService) AddTest(cmd *commands.TestCmd) (string, error) {
 
 	cmd.Test.TestCode = utils.RandomCode(8)
 	cmd.Test.Password, err = utils.HashPassword(cmd.Test.Password)
-
 	if err != nil {
 		return "", err
 	}
@@ -88,25 +87,30 @@ func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *co
 		return 0.0, err
 	}
 
+	var numOfAnswers uint
+	var partialScore uint
+
 	for _, questionsBase := range tm.Questions {
 		for _, questionsAnswered := range cmd.Test.Questions {
 			if questionsBase.ID == questionsAnswered.ID {
-				partialScore := 0.0
+				partialScore = 0
+				numOfAnswers = uint(len(questionsBase.Answers))
 				for _, answersBase := range questionsBase.Answers {
 					for _, answersAnswered := range questionsAnswered.Answers {
+
 						if answersBase.ID == answersAnswered.ID && answersBase.Correct == answersAnswered.Checked {
-							partialScore += 1.0
+							partialScore += 1
 						}
 					}
 				}
-				if partialScore == 4 {
+				if partialScore == numOfAnswers {
 					score++
 				}
 			}
 		}
 	}
 
-	finalScore := (score / float32(tm.NumOfTestQuestions)) * 100
+	finalScore := (float32(score) / float32(tm.NumOfTestQuestions)) * 100
 
 	err = es.testsRepo.UpdateResult(resultUUID, &finalScore)
 

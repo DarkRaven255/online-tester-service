@@ -3,15 +3,20 @@ package responses
 import (
 	"online-tests/delivery/models/testsolvemodel"
 	"online-tests/domain/domainmodel"
+	"time"
 )
 
 type TestSolveModel struct {
-	Test *testsolvemodel.Test `json:"test"`
+	Test       *testsolvemodel.Test `json:"test"`
+	ResultUUID *string              `json:"resultUUID"`
+	FinishedAt *time.Time           `json:"finishedAt"` //TODO: prepared for future finishedAt column in the db
 }
 
-func NewTestSolveModelResp(test *domainmodel.Test) *TestSolveModel {
+func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *string, finishedAt *time.Time) *TestSolveModel {
 	return &TestSolveModel{
-		Test: newTestSolveModel(test),
+		Test:       newTestSolveModel(test),
+		ResultUUID: resultUUID,
+		FinishedAt: finishedAt,
 	}
 }
 

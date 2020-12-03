@@ -20,6 +20,10 @@ type ResponseTestCode struct {
 	TestCode string `json:"testCode"`
 }
 
+type ResponsePercentResult struct {
+	PercentResult float32 `json:"percentResult"`
+}
+
 type server struct {
 	*app.App
 }
@@ -35,7 +39,7 @@ func NewHandler(e *echo.Echo, app *app.App) {
 
 	e.GET("/test/check/:code", handler.CheckIsTest)
 	e.POST("/test/start/:code", handler.StartTest)
-	// e.POST("/test/save/:code", handler.AddTestSolve)
+	e.POST("/test/save/:code/:resultUUID", handler.FinishTest)
 }
 
 func (s *server) AddTest(c echo.Context) error {
@@ -141,7 +145,7 @@ func (s *server) StartTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	resp, updatedAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
+	resp, createdAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
@@ -150,7 +154,10 @@ func (s *server) StartTest(c echo.Context) error {
 	cookie := new(http.Cookie)
 	cookie.Name = "resultUUID"
 	cookie.Value = *resultUUID
-	cookie.Expires = updatedAt.Add(15 * time.Minute) //TODO: add option to change time
+	cookie.Expires = createdAt.Add(75 * time.Minute) //TODO: add option to change time and fix for timezone to use UTC everywhere except cookies
+	cookie.SameSite = http.SameSiteNoneMode
+	cookie.Secure = true
+	cookie.Domain = "web.app"
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
@@ -159,6 +166,29 @@ func (s *server) StartTest(c echo.Context) error {
 	c.SetCookie(cookie)
 
 	return c.JSON(http.StatusOK, resp)
+}
+
+func (s *server) FinishTest(c echo.Context) error {
+	var (
+		err        error
+		testCode   = c.Param("code")
+		resultUUID = c.Param("resultUUID")
+		cmd        commands.FinishTestCmd
+	)
+
+	err = c.Bind(&cmd)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	res, err := s.TestsService.FinishTest(&testCode, &resultUUID, &cmd)
+
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, ResponsePercentResult{PercentResult: res})
 }
 
 func getStatusCode(err error) int {

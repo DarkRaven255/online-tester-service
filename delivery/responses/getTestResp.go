@@ -17,9 +17,11 @@ func NewTestModelResp(test *domainmodel.Test) *TestModel {
 
 func newTestModel(domainTest *domainmodel.Test) *testmodel.Test {
 	return &testmodel.Test{
-		ID:        domainTest.ID,
-		Title:     domainTest.Title,
-		Questions: *newTestQuestionsArray(&domainTest.Questions, domainTest.NumTestOfQuestions, domainTest.ID),
+		ID:                 domainTest.ID,
+		Title:              domainTest.Title,
+		TestCode:           domainTest.TestCode,
+		NumOfTestQuestions: domainTest.NumTestOfQuestions,
+		Questions:          *newTestQuestionsArray(&domainTest.Questions, domainTest.NumTestOfQuestions, domainTest.ID),
 	}
 }
 
@@ -27,6 +29,7 @@ func newTestQuestion(q *domainmodel.Question, tID uint64) *testmodel.Question {
 	return &testmodel.Question{
 		ID:       q.ID,
 		Question: q.Question,
+		Required: q.Required,
 		Answers:  *newTestAnswersArray(&q.Answers, q.ID),
 	}
 }
@@ -42,8 +45,9 @@ func newTestQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uint, tI
 
 func newTestAnswer(a *domainmodel.Answer, qID uint64) *testmodel.Answer {
 	return &testmodel.Answer{
-		ID:     a.ID,
-		Answer: a.Answer,
+		ID:      a.ID,
+		Answer:  a.Answer,
+		Correct: a.Correct,
 	}
 }
 

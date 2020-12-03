@@ -1,13 +1,12 @@
 # online-tests
 University project
 
-To run, create file conf.json in the main dir with postgresql credentials following below schema:
+To run locally, you need to initialise env variables:
 
-```json
-{
-    "host": "yourHost",
-    "user": "yourUsername",
-    "password": "yourPassword",
-    "dbname": "onlinetests",
-    "port": 1234
-}
+ENV=dev
+PORT=8080
+HOST=yourHost
+USER=yourUsername
+PASSWORD=yourPassword
+DBNAME=onlinetests
+DBPORT=5432

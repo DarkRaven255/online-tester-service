@@ -62,17 +62,19 @@ func (es *testsService) DeleteTest(testCode *string) error {
 	return nil
 }
 
-func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, *time.Time, *string, error) {
+func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, error) {
 
 	tm, err := es.testsRepo.GetByTestCode(testCode)
 	if err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
 	rm := domainmodel.NewResultModel(cmd, tm.ID)
 	err = es.testsRepo.AddResult(tm, rm)
 
-	return responses.NewTestSolveModelResp(tm), &rm.CreatedAt, &rm.ResultUUID, nil
+	finishedAt := rm.CreatedAt.Add(15 * time.Minute) //TODO: Add ability to set time manually
+
+	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &finishedAt), nil
 }
 
 func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (score float32, err error) {

@@ -4,7 +4,6 @@ import (
 	"online-tests/delivery/commands"
 	"online-tests/delivery/responses"
 	"online-tests/domain/domainmodel"
-	"time"
 )
 
 type TestsService interface {
@@ -12,7 +11,7 @@ type TestsService interface {
 	GetTest(testCode *string) (*responses.TestModel, error)
 	EditTest(addTestCmd *commands.TestCmd, testCode *string) error
 	DeleteTest(testCode *string) error
-	StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, *time.Time, *string, error)
+	StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, error)
 	FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (float32, error)
 }
 

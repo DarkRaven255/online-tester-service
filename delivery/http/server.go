@@ -5,7 +5,6 @@ import (
 	"online-tests/app"
 	"online-tests/delivery/commands"
 	"online-tests/domain"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
@@ -145,25 +144,11 @@ func (s *server) StartTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	resp, createdAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
+	resp, err := s.TestsService.StartTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
-
-	cookie := new(http.Cookie)
-	cookie.Name = "resultUUID"
-	cookie.Value = *resultUUID
-	cookie.Expires = createdAt.Add(75 * time.Minute) //TODO: add option to change time and fix for timezone to use UTC everywhere except cookies
-	cookie.SameSite = http.SameSiteNoneMode
-	cookie.Secure = true
-	cookie.Domain = "web.app"
-
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
-	}
-
-	c.SetCookie(cookie)
 
 	return c.JSON(http.StatusOK, resp)
 }

@@ -354,3 +354,7 @@ config.json
 cmd/onlinetests/__debug_bin
 
 .vscode/
+
+app.yaml
+
+.gcloudignore

@@ -99,7 +99,7 @@ func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *co
 		}
 	}
 
-	finalScore := (score / float32(tm.NumTestOfQuestions)) * 100
+	finalScore := (score / float32(tm.NumOfTestQuestions)) * 100
 
 	err = es.testsRepo.UpdateResult(resultUUID, &finalScore)
 

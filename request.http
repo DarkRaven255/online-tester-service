@@ -97,7 +97,8 @@ Content-Type: application/json
       "title": "Epic test title",
       "userID":123,
       "numOfTestQuestions":2,
-      "testTime": 10,
+      "numOfTestQuestions":4,
+      "password": "XD",
       "questions":[
          {
             "question":"to be or not to be?",
@@ -126,20 +127,20 @@ Content-Type: application/json
 }
 
 ###
-GET {{host}}/test/QTSAVjHn
+GET {{host}}/test/OdfN0X1x
 
 ###
 GET {{host}}/test/check/QTSAVjHn
 
 ###
-POST {{host}}/test/start/QTSAVjHn
+POST {{host}}/test/start/OdfN0X1x
 Content-Type: application/json
 
 {
    "result":{
       "firstName":"Jan",
       "lastName":"Dzban",
-      "email":"xd@gmail.com"
+      "email":"xdgmail.com"
    }
 }
 

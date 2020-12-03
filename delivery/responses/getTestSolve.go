@@ -24,7 +24,7 @@ func newTestSolveModel(domainTest *domainmodel.Test) *testsolvemodel.Test {
 	return &testsolvemodel.Test{
 		ID:        domainTest.ID,
 		Title:     domainTest.Title,
-		Questions: *newTestSolveQuestionsArray(&domainTest.Questions, domainTest.NumTestOfQuestions, domainTest.ID),
+		Questions: *newTestSolveQuestionsArray(&domainTest.Questions, domainTest.NumOfTestQuestions, domainTest.ID),
 	}
 }
 

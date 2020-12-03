@@ -26,7 +26,7 @@ func (Result) TableName() string {
 	return "onlinetests.results"
 }
 
-func NewResultModel(cmd *commands.StartTestCmd, id uint64, testTime int) *Result {
+func NewResultModel(cmd *commands.StartTestCmd, id uint64, testTime uint) *Result {
 	resultUUID := uuid.New().String()
 	return &Result{
 		ResultUUID: resultUUID,

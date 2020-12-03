@@ -20,9 +20,11 @@ func newTestModel(domainTest *domainmodel.Test) *testmodel.Test {
 		ID:                 domainTest.ID,
 		Title:              domainTest.Title,
 		TestCode:           domainTest.TestCode,
-		NumOfTestQuestions: domainTest.NumTestOfQuestions,
+		NumOfTestQuestions: domainTest.NumOfTestQuestions,
+		NumOfQuestions:     domainTest.NumOfQuestions,
 		TestTime:           domainTest.TestTime,
-		Questions:          *newTestQuestionsArray(&domainTest.Questions, domainTest.NumTestOfQuestions, domainTest.ID),
+		Password:           "***** ***",
+		Questions:          *newTestQuestionsArray(&domainTest.Questions, domainTest.NumOfTestQuestions, domainTest.ID),
 	}
 }
 

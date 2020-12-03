@@ -5,6 +5,7 @@ import (
 	"online-tests/delivery/responses"
 	"online-tests/domain"
 	"online-tests/domain/domainmodel"
+	"online-tests/utils"
 )
 
 type testsService struct {
@@ -12,10 +13,16 @@ type testsService struct {
 }
 
 func (es *testsService) AddTest(cmd *commands.TestCmd) (string, error) {
-	var (
-		err  error
-		test = domainmodel.NewTestModel(cmd)
-	)
+	var err error
+
+	cmd.Test.TestCode = utils.RandomCode(8)
+	cmd.Test.Password, err = utils.HashPassword(cmd.Test.Password)
+
+	if err != nil {
+		return "", err
+	}
+
+	test := domainmodel.NewTestModel(cmd)
 
 	err = es.testsRepo.Create(&test)
 	if err != nil {

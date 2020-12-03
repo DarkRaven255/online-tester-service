@@ -2,7 +2,6 @@ package domainmodel
 
 import (
 	"online-tests/delivery/commands"
-	"online-tests/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -28,14 +27,13 @@ func (Test) TableName() string {
 }
 
 func NewTestModel(cmd *commands.TestCmd) Test {
-	tCode := utils.RandomCode(8)
 	return Test{
 		Title:              cmd.Test.Title,
 		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
 		NumOfQuestions:     cmd.Test.NumOfQuestions,
 		TestTime:           cmd.Test.TestTime,
 		Password:           cmd.Test.Password,
-		TestCode:           tCode,
+		TestCode:           cmd.Test.TestCode,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }

@@ -3,6 +3,8 @@ package utils
 import (
 	"math/rand"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 const charset = "abcdefghijklmnopqrstuvwxyz" +
@@ -21,4 +23,14 @@ func StringWithCharset(length int, charset string) string {
 
 func RandomCode(length int) string {
 	return StringWithCharset(length, charset)
+}
+
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
+}
+
+func CheckPasswordHash(password, hash string) bool {
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }

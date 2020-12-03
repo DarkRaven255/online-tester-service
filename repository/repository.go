@@ -103,6 +103,17 @@ func (r *repository) AddResult(entry *domainmodel.Test, result *domainmodel.Resu
 	return nil
 }
 
+func (r *repository) UpdateResult(resultUUID *string, finalScore *float32) error {
+
+	err := r.db.Where("result_uuid = ?", resultUUID).Updates(domainmodel.Result{Result: *finalScore}).Error
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewEntryRepository(dbConn *gorm.DB) domain.TestsRepository {
 
 	return &repository{

@@ -13,6 +13,7 @@ type TestsService interface {
 	EditTest(addTestCmd *commands.TestCmd, testCode *string) error
 	DeleteTest(testCode *string) error
 	StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, *time.Time, *string, error)
+	FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (float32, error)
 }
 
 type TestsRepository interface {
@@ -21,4 +22,5 @@ type TestsRepository interface {
 	EditTestByTestCode(test *domainmodel.Test, testCode *string) error
 	Delete(testCode *string) error
 	AddResult(entry *domainmodel.Test, result *domainmodel.Result) error
+	UpdateResult(resultUUID *string, finalScore *float32) error
 }

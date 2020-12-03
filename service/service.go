@@ -75,6 +75,42 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 	return responses.NewTestSolveModelResp(tm), &rm.CreatedAt, &rm.ResultUUID, nil
 }
 
+func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (score float32, err error) {
+
+	tm, err := es.testsRepo.GetByTestCode(testCode)
+	if err != nil {
+		return 0.0, err
+	}
+
+	for _, questionsBase := range tm.Questions {
+		for _, questionsAnswered := range cmd.Test.Questions {
+			if questionsBase.ID == questionsAnswered.ID {
+				partialScore := 0.0
+				for _, answersBase := range questionsBase.Answers {
+					for _, answersAnswered := range questionsAnswered.Answers {
+						if answersBase.ID == answersAnswered.ID && answersBase.Correct == answersAnswered.Checked {
+							partialScore += 1.0
+						}
+					}
+				}
+				if partialScore == 4 {
+					score++
+				}
+			}
+		}
+	}
+
+	finalScore := (score / float32(tm.NumTestOfQuestions)) * 100
+
+	err = es.testsRepo.UpdateResult(resultUUID, &finalScore)
+
+	if err != nil {
+		return 0.0, err
+	}
+
+	return finalScore, nil
+}
+
 func NewTestService(er domain.TestsRepository) domain.TestsService {
 	es := &testsService{
 		testsRepo: er,

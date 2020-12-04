@@ -77,7 +77,7 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 	rm := domainmodel.NewResultModel(cmd, tm.ID, tm.TestTime)
 	err = es.testsRepo.AddResult(tm, rm)
 
-	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &rm.FinishedAt), nil
+	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &rm.CreatedAt, &rm.FinishedAt), nil
 }
 
 func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (score float32, err error) {

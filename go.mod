@@ -6,7 +6,6 @@ go 1.15
 require (
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-playground/validator v9.31.0+incompatible
-	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo v3.3.10+incompatible
@@ -16,7 +15,7 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.6.1 // indirect
-	golang.org/x/crypto v0.0.0-20201112155050-0c6587e931a9 // indirect
+	golang.org/x/crypto v0.0.0-20201203163018-be400aefbc4c
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gorm.io/driver/postgres v1.0.5
 	gorm.io/gorm v1.20.7

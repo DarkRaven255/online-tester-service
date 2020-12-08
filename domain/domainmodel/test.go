@@ -2,7 +2,6 @@ package domainmodel
 
 import (
 	"online-tests/delivery/commands"
-	"online-tests/utils"
 	"time"
 
 	"gorm.io/gorm"
@@ -14,8 +13,11 @@ type Test struct {
 	UpdatedAt          time.Time
 	DeletedAt          gorm.DeletedAt `sql:"index"`
 	Title              string
-	NumTestOfQuestions uint
-	TestCode           string     `qorm:"unique"`
+	Password           string
+	TestCode           string `qorm:"unique"`
+	NumOfTestQuestions uint
+	NumOfQuestions     uint
+	TestTime           uint       `gorm:"default:20"`
 	Questions          []Question `gorm:"foreignKey:TestID"`
 	Results            []Result   `gorm:"foreignKey:TestID"`
 }
@@ -24,21 +26,25 @@ func (Test) TableName() string {
 	return "onlinetests.tests"
 }
 
-func NewTestModel(cmd *commands.TestCmd) Test {
-	tCode := utils.RandomCode(8)
+func NewTestModel(cmd *commands.AddEditTestCmd) Test {
 	return Test{
 		Title:              cmd.Test.Title,
-		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
-		TestCode:           tCode,
+		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
+		NumOfQuestions:     cmd.Test.NumOfQuestions,
+		TestTime:           cmd.Test.TestTime,
+		Password:           cmd.Test.Password,
+		TestCode:           cmd.Test.TestCode,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }
 
-func NewEditTestModel(cmd *commands.TestCmd) Test {
+func NewEditTestModel(cmd *commands.AddEditTestCmd) Test {
 	return Test{
 		ID:                 cmd.Test.ID,
 		Title:              cmd.Test.Title,
-		NumTestOfQuestions: cmd.Test.NumOfTestQuestions,
+		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
+		NumOfQuestions:     cmd.Test.NumOfQuestions,
+		TestTime:           cmd.Test.TestTime,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }

@@ -13,6 +13,7 @@ type Result struct {
 	ResultUUID string `qorm:"unique"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
+	FinishedAt time.Time
 	DeletedAt  gorm.DeletedAt `sql:"index"`
 	FirstName  string
 	LastName   string
@@ -25,7 +26,7 @@ func (Result) TableName() string {
 	return "onlinetests.results"
 }
 
-func NewResultModel(cmd *commands.StartTestCmd, id uint64) *Result {
+func NewResultModel(cmd *commands.StartTestCmd, id *uint64, testTime *uint) *Result {
 	resultUUID := uuid.New().String()
 	return &Result{
 		ResultUUID: resultUUID,
@@ -34,6 +35,7 @@ func NewResultModel(cmd *commands.StartTestCmd, id uint64) *Result {
 		Email:      cmd.Result.Email,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
-		TestID:     id,
+		FinishedAt: time.Now().Add(time.Duration(*testTime) * time.Minute),
+		TestID:     *id,
 	}
 }

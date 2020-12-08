@@ -34,9 +34,10 @@ func main() {
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
-		AllowMethods: []string{"*"},
+		AllowOrigins:     []string{"*"},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowMethods:     []string{"*"},
+		AllowCredentials: true,
 	}))
 
 	go func() {

@@ -3,15 +3,22 @@ package responses
 import (
 	"online-tests/delivery/models/testsolvemodel"
 	"online-tests/domain/domainmodel"
+	"time"
 )
 
 type TestSolveModel struct {
-	Test *testsolvemodel.Test `json:"test"`
+	Test       *testsolvemodel.Test `json:"test"`
+	ResultUUID *string              `json:"resultUUID"`
+	CreatedAt  *time.Time           `json:"createdAt"`
+	FinishedAt *time.Time           `json:"finishedAt"`
 }
 
-func NewTestSolveModelResp(test *domainmodel.Test) *TestSolveModel {
+func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *string, createdAt *time.Time, finishedAt *time.Time) *TestSolveModel {
 	return &TestSolveModel{
-		Test: newTestSolveModel(test),
+		Test:       newTestSolveModel(test),
+		ResultUUID: resultUUID,
+		CreatedAt:  createdAt,
+		FinishedAt: finishedAt,
 	}
 }
 
@@ -19,7 +26,8 @@ func newTestSolveModel(domainTest *domainmodel.Test) *testsolvemodel.Test {
 	return &testsolvemodel.Test{
 		ID:        domainTest.ID,
 		Title:     domainTest.Title,
-		Questions: *newTestSolveQuestionsArray(&domainTest.Questions, domainTest.NumTestOfQuestions, domainTest.ID),
+		TestTime:  domainTest.TestTime,
+		Questions: *newTestSolveQuestionsArray(&domainTest.Questions, domainTest.NumOfTestQuestions, domainTest.ID),
 	}
 }
 

@@ -26,7 +26,7 @@ func (Test) TableName() string {
 	return "onlinetests.tests"
 }
 
-func NewTestModel(cmd *commands.TestCmd) Test {
+func NewTestModel(cmd *commands.AddEditTestCmd) Test {
 	return Test{
 		Title:              cmd.Test.Title,
 		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
@@ -38,7 +38,7 @@ func NewTestModel(cmd *commands.TestCmd) Test {
 	}
 }
 
-func NewEditTestModel(cmd *commands.TestCmd) Test {
+func NewEditTestModel(cmd *commands.AddEditTestCmd) Test {
 	return Test{
 		ID:                 cmd.Test.ID,
 		Title:              cmd.Test.Title,

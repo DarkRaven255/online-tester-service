@@ -3,5 +3,5 @@ package commands
 import "online-tests/delivery/models/testsolvemodel"
 
 type FinishTestCmd struct {
-	Test *testsolvemodel.Test `json:"test"`
+	Test *testsolvemodel.Test `json:"test" validate:"required"`
 }

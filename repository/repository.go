@@ -38,8 +38,9 @@ func (r *repository) GetByTestCode(testCode *string) (*domainmodel.Test, error) 
 	}
 	return &entry, nil
 }
-func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
 
+func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
+	//TODO: Check if id can be set before save.
 	for _, question := range entry.Questions {
 		err := r.db.Model(&question).Association("Answers").Replace(&question.Answers)
 
@@ -112,6 +113,16 @@ func (r *repository) UpdateResult(resultUUID *string, finalScore *float32) error
 	}
 
 	return nil
+}
+
+func (r *repository) GetTestPasswordHashByTestCode(testCode *string) (*string, error) {
+	var entry domainmodel.Test
+	err := r.db.Where("test_code = ?", testCode).First(&entry).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &entry.Password, nil
 }
 
 func NewEntryRepository(dbConn *gorm.DB) domain.TestsRepository {

@@ -5,7 +5,6 @@ import (
 	"online-tests/app"
 	"online-tests/delivery/commands"
 	"online-tests/domain"
-	"time"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
@@ -33,47 +32,44 @@ func NewHandler(e *echo.Echo, app *app.App) {
 		app,
 	}
 	e.POST("/test", handler.AddTest)
-	e.GET("/test/:code", handler.GetTest)
+	e.POST("/test/get", handler.GetTest)
 	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
 
-	e.GET("/test/check/:code", handler.CheckIsTest)
 	e.POST("/test/start/:code", handler.StartTest)
 	e.POST("/test/save/:code/:resultUUID", handler.FinishTest)
 }
 
 func (s *server) AddTest(c echo.Context) error {
-	var (
-		err      error
-		testCode string
-		cmd      commands.TestCmd
-	)
+	var cmd commands.AddEditTestCmd
 
-	err = c.Bind(&cmd)
+	err := c.Bind(&cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	testCode, err = s.TestsService.AddTest(&cmd)
+	testCode, err := s.TestsService.AddTest(&cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: testCode})
+	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: *testCode})
 }
 
 func (s *server) GetTest(c echo.Context) error {
 	var (
-		err      error
-		testCode = c.Param("code")
+		err error
+		cmd commands.GetTestCmd
 	)
 
-	resp, err := s.TestsService.GetTest(&testCode)
+	err = c.Bind(&cmd)
+
+	resp, err := s.TestsService.GetTest(&cmd)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -83,7 +79,7 @@ func (s *server) EditTest(c echo.Context) error {
 	var (
 		err      error
 		testCode = c.Param("code")
-		cmd      commands.TestCmd
+		cmd      commands.AddEditTestCmd
 	)
 
 	err = c.Bind(&cmd)
@@ -118,21 +114,6 @@ func (s *server) DeleteTest(c echo.Context) error {
 	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
 }
 
-func (s *server) CheckIsTest(c echo.Context) error {
-	var (
-		err      error
-		testCode = c.Param("code")
-	)
-
-	_, err = s.TestsService.GetTest(&testCode)
-
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
-	}
-
-	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
-}
-
 func (s *server) StartTest(c echo.Context) error {
 	var (
 		err      error
@@ -145,25 +126,11 @@ func (s *server) StartTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	resp, createdAt, resultUUID, err := s.TestsService.StartTest(&testCode, &cmd)
+	resp, err := s.TestsService.StartTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
-
-	cookie := new(http.Cookie)
-	cookie.Name = "resultUUID"
-	cookie.Value = *resultUUID
-	cookie.Expires = createdAt.Add(75 * time.Minute) //TODO: add option to change time and fix for timezone to use UTC everywhere except cookies
-	cookie.SameSite = http.SameSiteNoneMode
-	cookie.Secure = true
-	cookie.Domain = "web.app"
-
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
-	}
-
-	c.SetCookie(cookie)
 
 	return c.JSON(http.StatusOK, resp)
 }
@@ -188,7 +155,7 @@ func (s *server) FinishTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResponsePercentResult{PercentResult: res})
+	return c.JSON(http.StatusOK, ResponsePercentResult{PercentResult: *res})
 }
 
 func getStatusCode(err error) int {
@@ -205,6 +172,8 @@ func getStatusCode(err error) int {
 		return http.StatusNotFound
 	case domain.ErrConflict:
 		return http.StatusConflict
+	case domain.ErrUnauthorized:
+		return http.StatusUnauthorized
 	default:
 		return http.StatusInternalServerError
 	}

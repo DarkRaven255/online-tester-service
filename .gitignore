@@ -358,3 +358,5 @@ cmd/onlinetests/__debug_bin
 app.yaml
 
 .gcloudignore
+
+request.http

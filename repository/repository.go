@@ -115,6 +115,16 @@ func (r *repository) UpdateResult(resultUUID *string, finalScore *float32) error
 	return nil
 }
 
+func (r *repository) GetTestPasswordHashByTestCode(testCode *string) (*string, error) {
+	var entry domainmodel.Test
+	err := r.db.Where("test_code = ?", testCode).First(&entry).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &entry.Password, nil
+}
+
 func NewEntryRepository(dbConn *gorm.DB) domain.TestsRepository {
 
 	return &repository{

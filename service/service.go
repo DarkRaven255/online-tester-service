@@ -12,7 +12,7 @@ type testsService struct {
 	testsRepo domain.TestsRepository
 }
 
-func (es *testsService) AddTest(cmd *commands.TestCmd) (string, error) {
+func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (string, error) {
 	var err error
 
 	cmd.Test.TestCode = utils.RandomCode(8)
@@ -31,10 +31,13 @@ func (es *testsService) AddTest(cmd *commands.TestCmd) (string, error) {
 	return test.TestCode, nil
 }
 
-func (es *testsService) GetTest(testCode *string) (*responses.TestModel, error) {
-	var err error
+func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel, error) {
+	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(&cmd.Test.TestCode)
+	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
+		return nil, domain.ErrUnauthorized
+	}
 
-	result, err := es.testsRepo.GetByTestCode(testCode)
+	result, err := es.testsRepo.GetByTestCode(&cmd.Test.TestCode)
 	if err != nil {
 		return nil, err
 	}
@@ -42,11 +45,14 @@ func (es *testsService) GetTest(testCode *string) (*responses.TestModel, error) 
 	return responses.NewTestModelResp(result), nil
 }
 
-func (es *testsService) EditTest(cmd *commands.TestCmd, testCode *string) error {
-	var (
-		err  error
-		test = domainmodel.NewEditTestModel(cmd)
-	)
+func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string) error {
+
+	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
+	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
+		return domain.ErrUnauthorized
+	}
+
+	test := domainmodel.NewEditTestModel(cmd)
 
 	err = es.testsRepo.EditTestByTestCode(&test, testCode)
 	if err != nil {

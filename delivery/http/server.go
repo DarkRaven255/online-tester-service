@@ -32,7 +32,7 @@ func NewHandler(e *echo.Echo, app *app.App) {
 		app,
 	}
 	e.POST("/test", handler.AddTest)
-	e.GET("/test/:code", handler.GetTest)
+	e.POST("/test/get", handler.GetTest)
 	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
 
@@ -45,7 +45,7 @@ func (s *server) AddTest(c echo.Context) error {
 	var (
 		err      error
 		testCode string
-		cmd      commands.TestCmd
+		cmd      commands.AddEditTestCmd
 	)
 
 	err = c.Bind(&cmd)
@@ -65,14 +65,16 @@ func (s *server) AddTest(c echo.Context) error {
 
 func (s *server) GetTest(c echo.Context) error {
 	var (
-		err      error
-		testCode = c.Param("code")
+		err error
+		cmd commands.GetTestCmd
 	)
 
-	resp, err := s.TestsService.GetTest(&testCode)
+	err = c.Bind(&cmd)
+
+	resp, err := s.TestsService.GetTest(&cmd)
 
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
 	}
 
 	return c.JSON(http.StatusOK, resp)
@@ -82,7 +84,7 @@ func (s *server) EditTest(c echo.Context) error {
 	var (
 		err      error
 		testCode = c.Param("code")
-		cmd      commands.TestCmd
+		cmd      commands.AddEditTestCmd
 	)
 
 	err = c.Bind(&cmd)
@@ -190,6 +192,8 @@ func getStatusCode(err error) int {
 		return http.StatusNotFound
 	case domain.ErrConflict:
 		return http.StatusConflict
+	case domain.ErrUnauthorized:
+		return http.StatusUnauthorized
 	default:
 		return http.StatusInternalServerError
 	}

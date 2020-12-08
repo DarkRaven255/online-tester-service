@@ -4,24 +4,31 @@ import (
 	"online-tests/delivery/models/testmodel"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Answer struct {
-	ID         uint64 `gorm:"primary_key"`
+	ID         uuid.UUID `gorm:"type:uuid;primary_key"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	DeletedAt  gorm.DeletedAt `sql:"index"`
 	Answer     string
 	Correct    bool
-	QuestionID uint64
+	QuestionID uuid.UUID
 }
 
 func (Answer) TableName() string {
 	return "onlinetests.answers"
 }
 
-func newAnswer(a *testmodel.Answer, qID uint64) *Answer {
+func (answer *Answer) BeforeCreate(tx *gorm.DB) (err error) {
+	answer.ID = uuid.New()
+	return
+}
+
+
+func newAnswer(a *testmodel.Answer, qID uuid.UUID) *Answer {
 	return &Answer{
 		ID:         a.ID,
 		Answer:     a.Answer,
@@ -30,7 +37,7 @@ func newAnswer(a *testmodel.Answer, qID uint64) *Answer {
 	}
 }
 
-func newAnswerArray(aArr *[]testmodel.Answer, qID uint64) *[]Answer {
+func newAnswerArray(aArr *[]testmodel.Answer, qID uuid.UUID) *[]Answer {
 	answers := []Answer{}
 	for _, a := range *aArr {
 		answers = append(answers, *newAnswer(&a, qID))

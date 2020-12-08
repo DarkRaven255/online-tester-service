@@ -4,16 +4,18 @@ import (
 	"online-tests/delivery/models/testsolvemodel"
 	"online-tests/domain/domainmodel"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type TestSolveModel struct {
 	Test       *testsolvemodel.Test `json:"test"`
-	ResultUUID *string              `json:"resultUUID"`
+	ResultUUID *uuid.UUID           `json:"resultUUID"`
 	CreatedAt  *time.Time           `json:"createdAt"`
 	FinishedAt *time.Time           `json:"finishedAt"`
 }
 
-func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *string, createdAt *time.Time, finishedAt *time.Time) *TestSolveModel {
+func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *uuid.UUID, createdAt *time.Time, finishedAt *time.Time) *TestSolveModel {
 	return &TestSolveModel{
 		Test:       newTestSolveModel(test),
 		ResultUUID: resultUUID,
@@ -31,7 +33,7 @@ func newTestSolveModel(domainTest *domainmodel.Test) *testsolvemodel.Test {
 	}
 }
 
-func newTestSolveQuestion(q *domainmodel.Question, tID uint64) *testsolvemodel.Question {
+func newTestSolveQuestion(q *domainmodel.Question, tID uuid.UUID) *testsolvemodel.Question {
 	return &testsolvemodel.Question{
 		ID:       q.ID,
 		Question: q.Question,
@@ -39,7 +41,7 @@ func newTestSolveQuestion(q *domainmodel.Question, tID uint64) *testsolvemodel.Q
 	}
 }
 
-func newTestSolveQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uint, tID uint64) *[]testsolvemodel.Question {
+func newTestSolveQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uint, tID uuid.UUID) *[]testsolvemodel.Question {
 	questions := []testsolvemodel.Question{}
 	for _, q := range *qArr {
 		questions = append(questions, *newTestSolveQuestion(&q, tID))
@@ -48,14 +50,14 @@ func newTestSolveQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uin
 	return &questions
 }
 
-func newTestSolveAnswer(a *domainmodel.Answer, qID uint64) *testsolvemodel.Answer {
+func newTestSolveAnswer(a *domainmodel.Answer, qID uuid.UUID) *testsolvemodel.Answer {
 	return &testsolvemodel.Answer{
 		ID:     a.ID,
 		Answer: a.Answer,
 	}
 }
 
-func newTestSolveAnswersArray(aArr *[]domainmodel.Answer, qID uint64) *[]testsolvemodel.Answer {
+func newTestSolveAnswersArray(aArr *[]domainmodel.Answer, qID uuid.UUID) *[]testsolvemodel.Answer {
 	answers := []testsolvemodel.Answer{}
 	for _, a := range *aArr {
 		answers = append(answers, *newTestSolveAnswer(&a, qID))

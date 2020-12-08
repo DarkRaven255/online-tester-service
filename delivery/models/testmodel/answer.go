@@ -1,7 +1,9 @@
 package testmodel
 
+import "github.com/google/uuid"
+
 type Answer struct {
-	ID      uint64 `json:"id"`
-	Answer  string `json:"answer" validate:"required"`
-	Correct bool   `json:"correct" validate:"required"`
+	ID      uuid.UUID `json:"id"`
+	Answer  string    `json:"answer" validate:"required"`
+	Correct bool      `json:"correct" validate:"required"`
 }

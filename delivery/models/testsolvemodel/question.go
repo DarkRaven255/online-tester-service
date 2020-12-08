@@ -1,7 +1,9 @@
 package testsolvemodel
 
+import "github.com/google/uuid"
+
 type Question struct {
-	ID       uint64   `json:"id" validate:"required"`
-	Question string   `json:"question"`
-	Answers  []Answer `json:"answers" validate:"required"`
+	ID       uuid.UUID `json:"id" validate:"required"`
+	Question string    `json:"question"`
+	Answers  []Answer  `json:"answers" validate:"required"`
 }

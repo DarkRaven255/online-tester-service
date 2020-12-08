@@ -4,11 +4,12 @@ import (
 	"online-tests/delivery/commands"
 	"time"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
 type Test struct {
-	ID                 uint64 `gorm:"primary_key"`
+	ID                 uuid.UUID `gorm:"type:uuid;primary_key"`
 	CreatedAt          time.Time
 	UpdatedAt          time.Time
 	DeletedAt          gorm.DeletedAt `sql:"index"`
@@ -24,6 +25,11 @@ type Test struct {
 
 func (Test) TableName() string {
 	return "onlinetests.tests"
+}
+
+func (test *Test) BeforeCreate(tx *gorm.DB) (err error) {
+	test.ID = uuid.New()
+	return
 }
 
 func NewTestModel(cmd *commands.AddEditTestCmd) Test {

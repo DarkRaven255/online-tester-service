@@ -9,8 +9,7 @@ import (
 )
 
 type Result struct {
-	ID         uint64 `gorm:"primary_key"`
-	ResultUUID string `qorm:"unique"`
+	ID         uuid.UUID `gorm:"type:uuid;primary_key"`
 	CreatedAt  time.Time
 	UpdatedAt  time.Time
 	FinishedAt time.Time
@@ -19,17 +18,20 @@ type Result struct {
 	LastName   string
 	Email      string
 	Result     float32
-	TestID     uint64
+	TestID     uuid.UUID
 }
 
 func (Result) TableName() string {
 	return "onlinetests.results"
 }
 
-func NewResultModel(cmd *commands.StartTestCmd, id *uint64, testTime *uint) *Result {
-	resultUUID := uuid.New().String()
+func (result *Result) BeforeCreate(tx *gorm.DB) (err error) {
+	result.ID = uuid.New()
+	return
+}
+
+func NewResultModel(cmd *commands.StartTestCmd, id *uuid.UUID, testTime *uint) *Result {
 	return &Result{
-		ResultUUID: resultUUID,
 		FirstName:  cmd.Result.FirstName,
 		LastName:   cmd.Result.LastName,
 		Email:      cmd.Result.Email,

@@ -41,25 +41,21 @@ func NewHandler(e *echo.Echo, app *app.App) {
 }
 
 func (s *server) AddTest(c echo.Context) error {
-	var (
-		err      error
-		testCode string
-		cmd      commands.AddEditTestCmd
-	)
+	var cmd commands.AddEditTestCmd
 
-	err = c.Bind(&cmd)
+	err := c.Bind(&cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	testCode, err = s.TestsService.AddTest(&cmd)
+	testCode, err := s.TestsService.AddTest(&cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: testCode})
+	return c.JSON(http.StatusOK, ResponseTestCode{TestCode: *testCode})
 }
 
 func (s *server) GetTest(c echo.Context) error {
@@ -159,7 +155,7 @@ func (s *server) FinishTest(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	return c.JSON(http.StatusOK, ResponsePercentResult{PercentResult: res})
+	return c.JSON(http.StatusOK, ResponsePercentResult{PercentResult: *res})
 }
 
 func getStatusCode(err error) int {

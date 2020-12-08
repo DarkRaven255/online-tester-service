@@ -7,12 +7,12 @@ import (
 )
 
 type TestsService interface {
-	AddTest(addTestCmd *commands.AddEditTestCmd) (string, error)
+	AddTest(addTestCmd *commands.AddEditTestCmd) (*string, error)
 	GetTest(getTestCmd *commands.GetTestCmd) (*responses.TestModel, error)
 	EditTest(addTestCmd *commands.AddEditTestCmd, testCode *string) error
 	DeleteTest(testCode *string) error
 	StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, error)
-	FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (float32, error)
+	FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (*float32, error)
 }
 
 type TestsRepository interface {

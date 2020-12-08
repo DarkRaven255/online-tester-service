@@ -36,7 +36,6 @@ func NewHandler(e *echo.Echo, app *app.App) {
 	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
 
-	e.GET("/test/check/:code", handler.CheckIsTest)
 	e.POST("/test/start/:code", handler.StartTest)
 	e.POST("/test/save/:code/:resultUUID", handler.FinishTest)
 }
@@ -111,21 +110,6 @@ func (s *server) DeleteTest(c echo.Context) error {
 	testCode = c.Param("code")
 
 	err = s.TestsService.DeleteTest(&testCode)
-
-	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
-	}
-
-	return c.JSON(http.StatusOK, ResponseMessage{Message: "ok"})
-}
-
-func (s *server) CheckIsTest(c echo.Context) error {
-	var (
-		err      error
-		testCode = c.Param("code")
-	)
-
-	_, err = s.TestsService.GetTest(&testCode)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})

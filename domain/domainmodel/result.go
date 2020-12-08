@@ -26,7 +26,7 @@ func (Result) TableName() string {
 	return "onlinetests.results"
 }
 
-func NewResultModel(cmd *commands.StartTestCmd, id uint64, testTime uint) *Result {
+func NewResultModel(cmd *commands.StartTestCmd, id *uint64, testTime *uint) *Result {
 	resultUUID := uuid.New().String()
 	return &Result{
 		ResultUUID: resultUUID,
@@ -35,7 +35,7 @@ func NewResultModel(cmd *commands.StartTestCmd, id uint64, testTime uint) *Resul
 		Email:      cmd.Result.Email,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
-		FinishedAt: time.Now().Add(time.Duration(testTime) * time.Minute),
-		TestID:     id,
+		FinishedAt: time.Now().Add(time.Duration(*testTime) * time.Minute),
+		TestID:     *id,
 	}
 }

@@ -12,23 +12,23 @@ type testsService struct {
 	testsRepo domain.TestsRepository
 }
 
-func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (string, error) {
+func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 	var err error
 
 	cmd.Test.TestCode = utils.RandomCode(8)
 	cmd.Test.Password, err = utils.HashPassword(cmd.Test.Password)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
 	test := domainmodel.NewTestModel(cmd)
 
 	err = es.testsRepo.Create(&test)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return test.TestCode, nil
+	return &test.TestCode, nil
 }
 
 func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel, error) {
@@ -46,7 +46,6 @@ func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel,
 }
 
 func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string) error {
-
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
 	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
 		return domain.ErrUnauthorized
@@ -80,21 +79,24 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 		return nil, err
 	}
 
-	rm := domainmodel.NewResultModel(cmd, tm.ID, tm.TestTime)
+	rm := domainmodel.NewResultModel(cmd, &tm.ID, &tm.TestTime)
 	err = es.testsRepo.AddResult(tm, rm)
 
 	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &rm.CreatedAt, &rm.FinishedAt), nil
 }
 
-func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (score float32, err error) {
+func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (*float32, error) {
 
 	tm, err := es.testsRepo.GetByTestCode(testCode)
 	if err != nil {
-		return 0.0, err
+		return nil, err
 	}
 
-	var numOfAnswers uint
-	var partialScore uint
+	var (
+		numOfAnswers uint
+		partialScore uint
+		score        float32
+	)
 
 	for _, questionsBase := range tm.Questions {
 		for _, questionsAnswered := range cmd.Test.Questions {
@@ -121,10 +123,10 @@ func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *co
 	err = es.testsRepo.UpdateResult(resultUUID, &finalScore)
 
 	if err != nil {
-		return 0.0, err
+		return nil, err
 	}
 
-	return finalScore, nil
+	return &finalScore, nil
 }
 
 func NewTestService(er domain.TestsRepository) domain.TestsService {

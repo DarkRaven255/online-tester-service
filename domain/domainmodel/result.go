@@ -26,7 +26,10 @@ func (Result) TableName() string {
 }
 
 func (result *Result) BeforeCreate(tx *gorm.DB) (err error) {
-	result.ID = uuid.New()
+	nullUUID := uuid.UUID{}
+	if result.ID == nullUUID {
+		result.ID = uuid.New()
+	}
 	return
 }
 

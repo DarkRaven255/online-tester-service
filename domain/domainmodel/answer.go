@@ -23,10 +23,12 @@ func (Answer) TableName() string {
 }
 
 func (answer *Answer) BeforeCreate(tx *gorm.DB) (err error) {
-	answer.ID = uuid.New()
+	nullUUID := uuid.UUID{}
+	if answer.ID == nullUUID {
+		answer.ID = uuid.New()
+	}
 	return
 }
-
 
 func newAnswer(a *testmodel.Answer, qID uuid.UUID) *Answer {
 	return &Answer{

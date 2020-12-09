@@ -19,12 +19,6 @@ func (r *repository) Create(entry *domainmodel.Test) error {
 		return err
 	}
 
-	err = r.db.Save(&entry).Error
-
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -106,7 +100,7 @@ func (r *repository) AddResult(entry *domainmodel.Test, result *domainmodel.Resu
 
 func (r *repository) UpdateResult(resultUUID *string, finalScore *float32) error {
 
-	err := r.db.Where("result_uuid = ?", resultUUID).Updates(domainmodel.Result{Result: *finalScore}).Error
+	err := r.db.Where("id = ?", resultUUID).Updates(domainmodel.Result{Result: *finalScore}).Error
 
 	if err != nil {
 		return err

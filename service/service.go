@@ -33,6 +33,10 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 
 func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel, error) {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(&cmd.Test.TestCode)
+	if err != nil {
+		return nil, err
+	}
+
 	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
 		return nil, domain.ErrUnauthorized
 	}
@@ -47,6 +51,10 @@ func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel,
 
 func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string) error {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
+	if err != nil {
+		return err
+	}
+
 	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
 		return domain.ErrUnauthorized
 	}
@@ -82,7 +90,7 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 	rm := domainmodel.NewResultModel(cmd, &tm.ID, &tm.TestTime)
 	err = es.testsRepo.AddResult(tm, rm)
 
-	return responses.NewTestSolveModelResp(tm, &rm.ResultUUID, &rm.CreatedAt, &rm.FinishedAt), nil
+	return responses.NewTestSolveModelResp(tm, &rm.ID, &rm.CreatedAt, &rm.FinishedAt), nil
 }
 
 func (es *testsService) FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (*float32, error) {

@@ -3,6 +3,8 @@ package responses
 import (
 	"online-tests/delivery/models/testmodel"
 	"online-tests/domain/domainmodel"
+
+	"github.com/google/uuid"
 )
 
 type TestModel struct {
@@ -28,7 +30,7 @@ func newTestModel(domainTest *domainmodel.Test) *testmodel.Test {
 	}
 }
 
-func newTestQuestion(q *domainmodel.Question, tID uint64) *testmodel.Question {
+func newTestQuestion(q *domainmodel.Question, tID uuid.UUID) *testmodel.Question {
 	return &testmodel.Question{
 		ID:       q.ID,
 		Question: q.Question,
@@ -37,7 +39,7 @@ func newTestQuestion(q *domainmodel.Question, tID uint64) *testmodel.Question {
 	}
 }
 
-func newTestQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uint, tID uint64) *[]testmodel.Question {
+func newTestQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uint, tID uuid.UUID) *[]testmodel.Question {
 	questions := []testmodel.Question{}
 	for _, q := range *qArr {
 		questions = append(questions, *newTestQuestion(&q, tID))
@@ -46,7 +48,7 @@ func newTestQuestionsArray(qArr *[]domainmodel.Question, numOfQuestions uint, tI
 	return &questions
 }
 
-func newTestAnswer(a *domainmodel.Answer, qID uint64) *testmodel.Answer {
+func newTestAnswer(a *domainmodel.Answer, qID uuid.UUID) *testmodel.Answer {
 	return &testmodel.Answer{
 		ID:      a.ID,
 		Answer:  a.Answer,
@@ -54,7 +56,7 @@ func newTestAnswer(a *domainmodel.Answer, qID uint64) *testmodel.Answer {
 	}
 }
 
-func newTestAnswersArray(aArr *[]domainmodel.Answer, qID uint64) *[]testmodel.Answer {
+func newTestAnswersArray(aArr *[]domainmodel.Answer, qID uuid.UUID) *[]testmodel.Answer {
 	answers := []testmodel.Answer{}
 	for _, a := range *aArr {
 		answers = append(answers, *newTestAnswer(&a, qID))

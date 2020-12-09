@@ -1,8 +1,10 @@
 package testmodel
 
+import "github.com/google/uuid"
+
 type Question struct {
-	ID       uint64   `json:"id"`
-	Question string   `json:"question" validate:"required"`
-	Answers  []Answer `json:"answers" validate:"required"`
-	Required bool     `json:"required" validate:"required"`
+	ID       uuid.UUID `json:"id"`
+	Question string    `json:"question" validate:"required"`
+	Answers  []Answer  `json:"answers" validate:"required"`
+	Required bool      `json:"required" validate:"required"`
 }

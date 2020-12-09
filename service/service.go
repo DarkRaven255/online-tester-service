@@ -33,6 +33,10 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 
 func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel, error) {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(&cmd.Test.TestCode)
+	if err != nil {
+		return nil, err
+	}
+
 	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
 		return nil, domain.ErrUnauthorized
 	}
@@ -47,6 +51,10 @@ func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel,
 
 func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string) error {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
+	if err != nil {
+		return err
+	}
+
 	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
 		return domain.ErrUnauthorized
 	}

@@ -40,7 +40,7 @@ func NewResultModel(cmd *commands.StartTestCmd, id *uuid.UUID, testTime *uint) *
 		Email:      cmd.Result.Email,
 		CreatedAt:  time.Now(),
 		UpdatedAt:  time.Now(),
-		FinishedAt: time.Now().Add(time.Duration(*testTime) * time.Minute),
+		FinishedAt: time.Now().Add(time.Duration(*testTime) * time.Minute).Add(time.Duration(30) * time.Second),
 		TestID:     *id,
 	}
 }

@@ -49,6 +49,8 @@ func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *strin
 		return err
 	}
 
+	err = r.db.Model(&entry).Where("test_code = ?", testCode).Updates(map[string]interface{}{"randomize": entry.Randomize}).Error
+
 	err = r.db.Session(&gorm.Session{FullSaveAssociations: true}).Where("test_code = ?", testCode).Updates(&entry).Error
 
 	if err != nil {

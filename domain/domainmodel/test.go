@@ -18,7 +18,8 @@ type Test struct {
 	TestCode           string `qorm:"unique"`
 	NumOfTestQuestions uint
 	NumOfQuestions     uint
-	TestTime           uint       `gorm:"default:20"`
+	TestTime           uint `gorm:"default:15"`
+	Randomize          bool
 	Questions          []Question `gorm:"foreignKey:TestID"`
 	Results            []Result   `gorm:"foreignKey:TestID"`
 }
@@ -43,6 +44,7 @@ func NewTestModel(cmd *commands.AddEditTestCmd) Test {
 		TestTime:           cmd.Test.TestTime,
 		Password:           cmd.Test.Password,
 		TestCode:           cmd.Test.TestCode,
+		Randomize:          cmd.Test.Randomize,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }
@@ -54,6 +56,7 @@ func NewEditTestModel(cmd *commands.AddEditTestCmd) Test {
 		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
 		NumOfQuestions:     cmd.Test.NumOfQuestions,
 		TestTime:           cmd.Test.TestTime,
+		Randomize:          cmd.Test.Randomize,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
 	}
 }

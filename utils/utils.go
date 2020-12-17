@@ -14,7 +14,7 @@ const charset = "abcdefghijklmnopqrstuvwxyz" +
 var seededRand *rand.Rand = rand.New(
 	rand.NewSource(time.Now().UnixNano()))
 
-func StringWithCharset(length int, charset string) string {
+func stringWithCharset(length int, charset string) string {
 	b := make([]byte, length)
 	for i := range b {
 		b[i] = charset[seededRand.Intn(len(charset))]
@@ -23,7 +23,7 @@ func StringWithCharset(length int, charset string) string {
 }
 
 func RandomCode(length int) string {
-	return StringWithCharset(length, charset)
+	return stringWithCharset(length, charset)
 }
 
 func HashPassword(password string) (string, error) {
@@ -57,4 +57,24 @@ func ShuffleTest(test *domainmodel.Test) {
 			}
 		}
 	}
+}
+
+func PrepareTest(test *domainmodel.Test) {
+
+	if test.NumOfQuestions == test.NumOfTestQuestions {
+		return
+	}
+
+	for counter := test.NumOfQuestions; counter > test.NumOfTestQuestions; {
+		random := rand.Intn(int(counter))
+		if test.Questions[random].Required == false {
+			remove(test, &random)
+			counter--
+		}
+	}
+}
+
+func remove(q *domainmodel.Test, i *int) {
+	q.Questions[*i] = q.Questions[len(q.Questions)-1]
+	q.Questions = q.Questions[:len(q.Questions)-1]
 }

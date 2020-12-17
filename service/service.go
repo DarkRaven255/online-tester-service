@@ -87,6 +87,7 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 		return nil, err
 	}
 
+	utils.PrepareTest(tm)
 	utils.ShuffleTest(tm)
 
 	rm := domainmodel.NewResultModel(cmd, &tm.ID, &tm.TestTime)

@@ -12,15 +12,13 @@ type TestSolveModel struct {
 	Test       *testsolvemodel.Test `json:"test"`
 	ResultUUID *uuid.UUID           `json:"resultUUID"`
 	CreatedAt  *time.Time           `json:"createdAt"`
-	FinishedAt *time.Time           `json:"finishedAt"`
 }
 
-func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *uuid.UUID, createdAt *time.Time, finishedAt *time.Time) *TestSolveModel {
+func NewTestSolveModelResp(test *domainmodel.Test, resultUUID *uuid.UUID, createdAt *time.Time) *TestSolveModel {
 	return &TestSolveModel{
 		Test:       newTestSolveModel(test),
 		ResultUUID: resultUUID,
 		CreatedAt:  createdAt,
-		FinishedAt: finishedAt,
 	}
 }
 

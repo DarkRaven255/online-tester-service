@@ -26,6 +26,7 @@ func newTestModel(domainTest *domainmodel.Test) *testmodel.Test {
 		NumOfQuestions:     domainTest.NumOfQuestions,
 		TestTime:           domainTest.TestTime,
 		Password:           "***** ***",
+		Randomize:          domainTest.Randomize,
 		Questions:          *newTestQuestionsArray(&domainTest.Questions, domainTest.NumOfTestQuestions, domainTest.ID),
 	}
 }

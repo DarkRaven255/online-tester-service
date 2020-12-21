@@ -20,7 +20,7 @@ type Question struct {
 }
 
 func (Question) TableName() string {
-	return "onlinetests.questions"
+	return "online_tester_service.questions"
 }
 
 func (question *Question) BeforeCreate(tx *gorm.DB) (err error) {

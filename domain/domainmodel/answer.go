@@ -19,7 +19,7 @@ type Answer struct {
 }
 
 func (Answer) TableName() string {
-	return "onlinetests.answers"
+	return "online_tester_service.answers"
 }
 
 func (answer *Answer) BeforeCreate(tx *gorm.DB) (err error) {

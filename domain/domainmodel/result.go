@@ -22,7 +22,7 @@ type Result struct {
 }
 
 func (Result) TableName() string {
-	return "onlinetests.results"
+	return "online_tester_service.results"
 }
 
 func (result *Result) BeforeCreate(tx *gorm.DB) (err error) {

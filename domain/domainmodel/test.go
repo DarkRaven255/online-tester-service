@@ -27,7 +27,7 @@ type Test struct {
 }
 
 func (Test) TableName() string {
-	return "onlinetests.tests"
+	return "online_tester_service.tests"
 }
 
 func (test *Test) BeforeCreate(tx *gorm.DB) (err error) {

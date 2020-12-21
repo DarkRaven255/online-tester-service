@@ -34,7 +34,7 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 	return &test.TestCode, nil
 }
 
-func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel, error) {
+func (es *testsService) GetTest(cmd *commands.AuthorizeTestCmd) (*responses.TestModel, error) {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(&cmd.Test.TestCode)
 	if err != nil {
 		return nil, err

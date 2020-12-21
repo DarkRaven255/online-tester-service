@@ -1,6 +1,7 @@
 package domainmodel
 
 import (
+	"math/rand"
 	"online-tests/delivery/commands"
 	"time"
 
@@ -58,5 +59,44 @@ func NewEditTestModel(cmd *commands.AddEditTestCmd) Test {
 		TestTime:           cmd.Test.TestTime,
 		Randomize:          cmd.Test.Randomize,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
+	}
+}
+
+func (test *Test) ShuffleTest() {
+
+	if !test.Randomize {
+		return
+	}
+
+	for i := 1; i < len(test.Questions); i++ {
+		r := rand.Intn(i + 1)
+		if i != r {
+			test.Questions[r], test.Questions[i] = test.Questions[i], test.Questions[r]
+		}
+	}
+
+	for _, question := range test.Questions {
+		for i := 1; i < len(question.Answers); i++ {
+			r := rand.Intn(i + 1)
+			if i != r {
+				question.Answers[r], question.Answers[i] = question.Answers[i], question.Answers[r]
+			}
+		}
+	}
+}
+
+func (test *Test) PrepareTest() {
+
+	if test.NumOfQuestions == test.NumOfTestQuestions {
+		return
+	}
+
+	for counter := test.NumOfQuestions; counter > test.NumOfTestQuestions; {
+		random := rand.Intn(int(counter))
+		if test.Questions[random].Required == false {
+			test.Questions[random] = test.Questions[len(test.Questions)-1]
+			test.Questions = test.Questions[:len(test.Questions)-1]
+			counter--
+		}
 	}
 }

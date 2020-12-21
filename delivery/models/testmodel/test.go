@@ -7,9 +7,13 @@ type Test struct {
 	Title              string     `json:"title" validate:"required"`
 	NumOfTestQuestions uint       `json:"numOfTestQuestions" validate:"required"`
 	NumOfQuestions     uint       `json:"numOfQuestions" validate:"required"`
-	TestCode           string     `json:"testCode"`
 	Questions          []Question `json:"questions" validate:"required"`
 	Randomize          bool       `json:"randomize" validate:"required"`
 	TestTime           uint       `json:"testTime" validate:"required"`
-	Password           string     `json:"password"`
+	TestCredentials
+}
+
+type TestCredentials struct {
+	TestCode string `json:"testCode"`
+	Password string `json:"password,omitempty" validate:"required"`
 }

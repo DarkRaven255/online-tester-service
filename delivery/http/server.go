@@ -61,7 +61,7 @@ func (s *server) AddTest(c echo.Context) error {
 func (s *server) GetTest(c echo.Context) error {
 	var (
 		err error
-		cmd commands.GetTestCmd
+		cmd commands.AuthorizeTestCmd
 	)
 
 	err = c.Bind(&cmd)

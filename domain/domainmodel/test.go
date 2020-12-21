@@ -1,6 +1,7 @@
 package domainmodel
 
 import (
+	"errors"
 	"math/rand"
 	"online-tests/delivery/commands"
 	"time"
@@ -37,8 +38,13 @@ func (test *Test) BeforeCreate(tx *gorm.DB) (err error) {
 	return
 }
 
-func NewTestModel(cmd *commands.AddEditTestCmd) Test {
-	return Test{
+func NewTestModel(cmd *commands.AddEditTestCmd) (*Test, error) {
+
+	if err := validateCommand(cmd); err != nil {
+		return nil, err
+	}
+
+	return &Test{
 		Title:              cmd.Test.Title,
 		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
 		NumOfQuestions:     cmd.Test.NumOfQuestions,
@@ -47,11 +53,16 @@ func NewTestModel(cmd *commands.AddEditTestCmd) Test {
 		TestCode:           cmd.Test.TestCode,
 		Randomize:          cmd.Test.Randomize,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
-	}
+	}, nil
 }
 
-func NewEditTestModel(cmd *commands.AddEditTestCmd) Test {
-	return Test{
+func NewEditTestModel(cmd *commands.AddEditTestCmd) (*Test, error) {
+
+	if err := validateCommand(cmd); err != nil {
+		return nil, err
+	}
+
+	return &Test{
 		ID:                 cmd.Test.ID,
 		Title:              cmd.Test.Title,
 		NumOfTestQuestions: cmd.Test.NumOfTestQuestions,
@@ -59,7 +70,47 @@ func NewEditTestModel(cmd *commands.AddEditTestCmd) Test {
 		TestTime:           cmd.Test.TestTime,
 		Randomize:          cmd.Test.Randomize,
 		Questions:          *newQuestionsArray(&cmd.Test.Questions, cmd.Test.ID),
+	}, nil
+}
+
+func validateCommand(cmd *commands.AddEditTestCmd) error {
+	if &cmd.Test.Title == nil {
+		return errors.New("Title can not be empty!")
 	}
+
+	if &cmd.Test.NumOfTestQuestions == nil {
+		return errors.New("NumOfTestQuestions can not be empty!")
+	}
+
+	if &cmd.Test.NumOfQuestions == nil {
+		return errors.New("NumOfQuestions can not be empty!")
+	}
+
+	if &cmd.Test.TestTime == nil {
+		return errors.New("TestTime can not be empty!")
+	}
+
+	if &cmd.Test.Password == nil {
+		return errors.New("Password can not be empty!")
+	}
+
+	if &cmd.Test.Randomize == nil {
+		return errors.New("Randomize can not be empty!")
+	}
+
+	if &cmd.Test.Questions == nil {
+		return errors.New("Questions can not be empty!")
+	}
+
+	if cmd.Test.NumOfTestQuestions > cmd.Test.NumOfQuestions {
+		return errors.New("Amount of NumOfTestQuestions can not be larger than NumOfQuestions!")
+	}
+
+	if cmd.Test.NumOfQuestions != uint(len(cmd.Test.Questions)) {
+		return errors.New("NumOfQuestions does not match real amount of questions!")
+	}
+
+	return nil
 }
 
 func (test *Test) ShuffleTest() {

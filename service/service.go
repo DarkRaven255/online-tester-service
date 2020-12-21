@@ -21,9 +21,12 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 		return nil, err
 	}
 
-	test := domainmodel.NewTestModel(cmd)
+	test, err := domainmodel.NewTestModel(cmd)
+	if err != nil {
+		return nil, err
+	}
 
-	err = es.testsRepo.Create(&test)
+	err = es.testsRepo.Create(test)
 	if err != nil {
 		return nil, err
 	}
@@ -59,9 +62,12 @@ func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string)
 		return domain.ErrUnauthorized
 	}
 
-	test := domainmodel.NewEditTestModel(cmd)
+	test, err := domainmodel.NewEditTestModel(cmd)
+	if err != nil {
+		return err
+	}
 
-	err = es.testsRepo.EditTestByTestCode(&test, testCode)
+	err = es.testsRepo.EditTestByTestCode(test, testCode)
 	if err != nil {
 		return err
 	}

@@ -32,7 +32,7 @@ func NewHandler(e *echo.Echo, app *app.App) {
 		app,
 	}
 	e.POST("/test", handler.AddTest)
-	e.POST("/test/get", handler.GetTest)
+	e.POST("/test/get/:code", handler.GetTest)
 	e.PATCH("/test/:code", handler.EditTest)
 	e.DELETE("/test/:code", handler.DeleteTest)
 
@@ -44,8 +44,11 @@ func (s *server) AddTest(c echo.Context) error {
 	var cmd commands.AddEditTestCmd
 
 	err := c.Bind(&cmd)
-
 	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	if err = c.Validate(cmd); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
@@ -60,13 +63,21 @@ func (s *server) AddTest(c echo.Context) error {
 
 func (s *server) GetTest(c echo.Context) error {
 	var (
-		err error
-		cmd commands.AuthorizeTestCmd
+		err      error
+		testCode = c.Param("code")
+		cmd      commands.AuthorizeTestCmd
 	)
 
 	err = c.Bind(&cmd)
+	if err != nil {
+		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
+	}
 
-	resp, err := s.TestsService.GetTest(&cmd)
+	if err = c.Validate(cmd); err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	resp, err := s.TestsService.GetTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
@@ -83,12 +94,15 @@ func (s *server) EditTest(c echo.Context) error {
 	)
 
 	err = c.Bind(&cmd)
-
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
-	err = s.TestsService.EditTest(&cmd, &testCode)
+	if err = c.Validate(cmd); err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	err = s.TestsService.EditTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(getStatusCode(err), ResponseMessage{Message: err.Error()})
@@ -100,12 +114,20 @@ func (s *server) EditTest(c echo.Context) error {
 func (s *server) DeleteTest(c echo.Context) error {
 	var (
 		err      error
-		testCode string
+		testCode = c.Param("code")
+		cmd      commands.AuthorizeTestCmd
 	)
 
-	testCode = c.Param("code")
+	err = c.Bind(&cmd)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
 
-	err = s.TestsService.DeleteTest(&testCode)
+	if err = c.Validate(cmd); err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	err = s.TestsService.DeleteTest(&testCode, &cmd)
 
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
@@ -123,6 +145,10 @@ func (s *server) StartTest(c echo.Context) error {
 
 	err = c.Bind(&cmd)
 	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	if err = c.Validate(cmd); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 
@@ -144,8 +170,11 @@ func (s *server) FinishTest(c echo.Context) error {
 	)
 
 	err = c.Bind(&cmd)
-
 	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
+	}
+
+	if err = c.Validate(cmd); err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, ResponseMessage{Message: err.Error()})
 	}
 

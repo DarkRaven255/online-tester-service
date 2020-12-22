@@ -138,7 +138,15 @@ func (test *Test) ShuffleTest() {
 
 func (test *Test) PrepareTest() {
 
-	if test.NumOfQuestions == test.NumOfTestQuestions {
+	var numOfRequired uint
+
+	for _, question := range test.Questions {
+		if question.Required == true {
+			numOfRequired++
+		}
+	}
+
+	if test.NumOfQuestions == numOfRequired || test.NumOfQuestions == test.NumOfTestQuestions {
 		return
 	}
 

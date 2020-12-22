@@ -19,8 +19,7 @@ func NewTestModelResp(test *domainmodel.Test) *TestModel {
 
 func newTestModel(domainTest *domainmodel.Test) *testmodel.Test {
 
-	testCredentials := &testmodel.TestCredentials{
-		TestCode: domainTest.TestCode,
+	testPassword := &testmodel.TestPassword{
 		Password: "",
 	}
 
@@ -31,7 +30,8 @@ func newTestModel(domainTest *domainmodel.Test) *testmodel.Test {
 		NumOfQuestions:     domainTest.NumOfQuestions,
 		TestTime:           domainTest.TestTime,
 		Randomize:          domainTest.Randomize,
-		TestCredentials:    *testCredentials,
+		TestCode:           domainTest.TestCode,
+		TestPassword:       *testPassword,
 		Questions:          *newTestQuestionsArray(&domainTest.Questions, domainTest.NumOfTestQuestions, domainTest.ID),
 	}
 }

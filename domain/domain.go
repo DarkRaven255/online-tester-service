@@ -8,9 +8,9 @@ import (
 
 type TestsService interface {
 	AddTest(addTestCmd *commands.AddEditTestCmd) (*string, error)
-	GetTest(getTestCmd *commands.AuthorizeTestCmd) (*responses.TestModel, error)
-	EditTest(addTestCmd *commands.AddEditTestCmd, testCode *string) error
-	DeleteTest(testCode *string) error
+	GetTest(testCode *string, authorizeTestCmd *commands.AuthorizeTestCmd) (*responses.TestModel, error)
+	EditTest(testCode *string, addTestCmd *commands.AddEditTestCmd) error
+	DeleteTest(testCode *string, authorizeTestCmd *commands.AuthorizeTestCmd) error
 	StartTest(testCode *string, cmd *commands.StartTestCmd) (*responses.TestSolveModel, error)
 	FinishTest(testCode *string, resultUUID *string, cmd *commands.FinishTestCmd) (*float32, error)
 }

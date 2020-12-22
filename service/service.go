@@ -21,9 +21,12 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 		return nil, err
 	}
 
-	test := domainmodel.NewTestModel(cmd)
+	test, err := domainmodel.NewTestModel(cmd)
+	if err != nil {
+		return nil, err
+	}
 
-	err = es.testsRepo.Create(&test)
+	err = es.testsRepo.Create(test)
 	if err != nil {
 		return nil, err
 	}
@@ -31,8 +34,8 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 	return &test.TestCode, nil
 }
 
-func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel, error) {
-	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(&cmd.Test.TestCode)
+func (es *testsService) GetTest(testCode *string, cmd *commands.AuthorizeTestCmd) (*responses.TestModel, error) {
+	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +44,7 @@ func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel,
 		return nil, domain.ErrUnauthorized
 	}
 
-	result, err := es.testsRepo.GetByTestCode(&cmd.Test.TestCode)
+	result, err := es.testsRepo.GetByTestCode(testCode)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +52,7 @@ func (es *testsService) GetTest(cmd *commands.GetTestCmd) (*responses.TestModel,
 	return responses.NewTestModelResp(result), nil
 }
 
-func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string) error {
+func (es *testsService) EditTest(testCode *string, cmd *commands.AddEditTestCmd) error {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
 	if err != nil {
 		return err
@@ -59,9 +62,12 @@ func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string)
 		return domain.ErrUnauthorized
 	}
 
-	test := domainmodel.NewEditTestModel(cmd)
+	test, err := domainmodel.NewEditTestModel(cmd)
+	if err != nil {
+		return err
+	}
 
-	err = es.testsRepo.EditTestByTestCode(&test, testCode)
+	err = es.testsRepo.EditTestByTestCode(test, testCode)
 	if err != nil {
 		return err
 	}
@@ -69,8 +75,15 @@ func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string)
 	return nil
 }
 
-func (es *testsService) DeleteTest(testCode *string) error {
-	var err error
+func (es *testsService) DeleteTest(testCode *string, cmd *commands.AuthorizeTestCmd) error {
+	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
+	if err != nil {
+		return err
+	}
+
+	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
+		return domain.ErrUnauthorized
+	}
 
 	err = es.testsRepo.Delete(testCode)
 	if err != nil {
@@ -87,8 +100,8 @@ func (es *testsService) StartTest(testCode *string, cmd *commands.StartTestCmd) 
 		return nil, err
 	}
 
-	utils.PrepareTest(tm)
-	utils.ShuffleTest(tm)
+	tm.PrepareTest()
+	tm.ShuffleTest()
 
 	rm := domainmodel.NewResultModel(cmd, &tm.ID, &tm.TestTime)
 	err = es.testsRepo.AddResult(tm, rm)

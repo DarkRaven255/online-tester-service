@@ -34,8 +34,8 @@ func (es *testsService) AddTest(cmd *commands.AddEditTestCmd) (*string, error) {
 	return &test.TestCode, nil
 }
 
-func (es *testsService) GetTest(cmd *commands.AuthorizeTestCmd) (*responses.TestModel, error) {
-	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(&cmd.Test.TestCode)
+func (es *testsService) GetTest(testCode *string, cmd *commands.AuthorizeTestCmd) (*responses.TestModel, error) {
+	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (es *testsService) GetTest(cmd *commands.AuthorizeTestCmd) (*responses.Test
 		return nil, domain.ErrUnauthorized
 	}
 
-	result, err := es.testsRepo.GetByTestCode(&cmd.Test.TestCode)
+	result, err := es.testsRepo.GetByTestCode(testCode)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (es *testsService) GetTest(cmd *commands.AuthorizeTestCmd) (*responses.Test
 	return responses.NewTestModelResp(result), nil
 }
 
-func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string) error {
+func (es *testsService) EditTest(testCode *string, cmd *commands.AddEditTestCmd) error {
 	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
 	if err != nil {
 		return err
@@ -75,8 +75,15 @@ func (es *testsService) EditTest(cmd *commands.AddEditTestCmd, testCode *string)
 	return nil
 }
 
-func (es *testsService) DeleteTest(testCode *string) error {
-	var err error
+func (es *testsService) DeleteTest(testCode *string, cmd *commands.AuthorizeTestCmd) error {
+	pwd, err := es.testsRepo.GetTestPasswordHashByTestCode(testCode)
+	if err != nil {
+		return err
+	}
+
+	if !utils.CheckPasswordHash(cmd.Test.Password, *pwd) {
+		return domain.ErrUnauthorized
+	}
 
 	err = es.testsRepo.Delete(testCode)
 	if err != nil {

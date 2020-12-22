@@ -9,7 +9,7 @@ import (
 type Result struct {
 	ResultUUID uuid.UUID `json:"-"`
 	UpdatedAt  time.Time `json:"-"`
-	FirstName  string    `json:"firstName" validate:"required email"`
+	FirstName  string    `json:"firstName" validate:"required"`
 	LastName   string    `json:"lastName" validate:"required"`
-	Email      string    `json:"email" validate:"required"`
+	Email      string    `json:"email" validate:"required,email"`
 }

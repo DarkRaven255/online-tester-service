@@ -8,12 +8,12 @@ type Test struct {
 	NumOfTestQuestions uint       `json:"numOfTestQuestions" validate:"required"`
 	NumOfQuestions     uint       `json:"numOfQuestions" validate:"required"`
 	Questions          []Question `json:"questions" validate:"required"`
-	Randomize          bool       `json:"randomize" validate:"required"`
+	Randomize          bool       `json:"randomize"`
 	TestTime           uint       `json:"testTime" validate:"required"`
-	TestCredentials
+	TestCode           string     `json:"testCode"`
+	TestPassword
 }
 
-type TestCredentials struct {
-	TestCode string `json:"testCode"`
+type TestPassword struct {
 	Password string `json:"password,omitempty" validate:"required"`
 }

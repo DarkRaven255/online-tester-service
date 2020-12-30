@@ -197,7 +197,7 @@ func getStatusCode(err error) int {
 	switch err {
 	case domain.ErrInternalServerError:
 		return http.StatusInternalServerError
-	case domain.ErrNotFound, gorm.ErrRecordNotFound:
+	case domain.ErrNotFound, domain.ErrRecordNotFound, gorm.ErrRecordNotFound:
 		return http.StatusNotFound
 	case domain.ErrConflict:
 		return http.StatusConflict

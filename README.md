@@ -12,3 +12,4 @@ To run locally, you need to initialise env database variables:
     DBNAME=online_tester_service
     DBPORT=5432
 
+Copyright (c) 2020 Klaudia Dulemba

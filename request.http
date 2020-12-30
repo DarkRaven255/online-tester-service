@@ -1,0 +1,200 @@
+# @host = http://online-tester-service.herokuapp.com
+@host = http://localhost:8080
+@testCode = Z1NrlDur
+@resultUUID = 42df328f-a5a9-45f2-a316-352923f00d0e
+
+
+
+### Add new test
+POST {{host}}/test
+Content-Type: application/json
+
+{
+   "test":{
+      "title": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "numOfTestQuestions":3,
+      "numOfQuestions":4,
+      "password": "123",
+      "randomize": true,
+      "testTime": 5,
+      "questions":[
+         {
+            "question":"Donec odio turpis, porttitor efficitur dolor sit amet, dictum vulputate neque. Fusce imperdiet interdum massa, in faucibus sapien egestas ac. Nullam a augue turpis?",
+            "required": true,
+            "answers":[
+               {
+                  "answer":"Suspendisse nisi leo, pharetra ut pellentesque a, condimentum et quam.",
+                  "correct":false
+               },
+               {
+                  "answer":"Proin est mauris, semper nec felis id, ultricies iaculis diam. (t)",
+                  "correct":true
+               },
+               {
+                  "answer":"Donec aliquet est at augue scelerisque consectetur.",
+                  "correct":false
+               },
+               {
+                  "answer":"Quisque tempor nunc sed pharetra mattis. (t)",
+                  "correct":true
+               }
+            ]
+         },
+                  {
+            "question":"Nunc hendrerit nec nisl nec elementum?",
+            "required": true,
+            "answers":[
+               {
+                  "answer":"Ut gravida ultrices nunc ac consequat.",
+                  "correct":false
+               },
+               {
+                  "answer":"Proin est mauris, semper nec felis id, ultricies iaculis diam. (t)",
+                  "correct":true
+               },
+               {
+                  "answer":" Cras ullamcorper dolor a sapien tempus ullamcorper.",
+                  "correct":false
+               },
+               {
+                  "answer":"Quisque tempor nunc sed pharetra mattis. (t)",
+                  "correct":true
+               }
+            ]
+         },
+                  {
+            "question":"Nunc hendrerit nec nisl nec elementum?",
+            "required": true,
+            "answers":[
+               {
+                  "answer":"Duis iaculis, risus nec pharetra scelerisque, mauris nunc congue velit, eget luctus leo eros eget est.",
+                  "correct":false
+               },
+               {
+                  "answer":"Quisque tempor nunc sed pharetra mattis. (t)",
+                  "correct":true
+               }
+            ]
+         },
+                  {
+            "question":"Suspendisse ullamcorper ut lorem quis condimentum?",
+            "required": false,
+            "answers":[
+               {
+                  "answer":"Suspendisse nisi leo, pharetra ut pellentesque a, condimentum et quam.",
+                  "correct":false
+               },
+               {
+                  "answer":"Proin est mauris, semper nec felis id, ultricies iaculis diam. (t)",
+                  "correct":true
+               },
+               {
+                  "answer":"Donec aliquet est at augue scelerisque consectetur.(t)",
+                  "correct":true
+               },
+               {
+                  "answer":"Cras eu condimentum leo, ut ornare odio.",
+                  "correct":false
+               }
+            ]
+         }
+      ]
+   }
+}
+
+### Update test endpoint
+PATCH {{host}}/test/{{testCode}}
+Content-Type: application/json
+
+{
+   "test":{
+      "id": "bda888a1-360d-43ee-a56a-29e59b4efe98",
+      "title": "Updated test title",
+      "numOfTestQuestions":1,
+      "numOfQuestions":1,
+      "testTime": 5,
+      "password": "123",
+      "randomize": true,
+      "questions":[
+         {
+            "id": "66c5d218-e317-48e3-9909-b992d44ee354",
+            "question":"Updated test Question",
+            "required": false,
+            "answers":[
+               {
+                  "id": "578ad493-2d6e-4f0d-b5cb-47b498e6033e",
+                  "answer":"Updated test Answer",
+                  "correct":true
+               },
+               {
+                  "answer": "12",
+                  "correct": true
+               }
+            ]
+         }
+      ]
+   }
+}
+
+### Get Test endpoint
+POST {{host}}/test/get/{{testCode}}
+Content-Type: application/json
+
+{
+   "test":{
+      "password":"123"
+   }
+}
+
+### Delete test endpoint
+DELETE {{host}}/test/{{testCode}}
+Content-Type: application/json
+
+{
+   "test":{
+      "password":"123"
+   }
+}
+
+### Start test endpoint
+POST {{host}}/test/start/{{testCode}}
+Content-Type: application/json
+
+{
+   "result":{
+      "firstName":"Jan",
+      "lastName":"Kula",
+      "email":"abcd@gmail.com"
+   }
+}
+
+
+### Save test endpoint
+POST {{host}}/test/save/{{testCode}}/{{resultUUID}}
+Content-Type: application/json
+
+{
+  "test": {
+    "id": "bda888a1-360d-43ee-a56a-29e59b4efe98",
+    "questions": [
+      {
+        "id": "66c5d218-e317-48e3-9909-b992d44ee354",
+        "answers": [
+          {
+            "id": "578ad493-2d6e-4f0d-b5cb-47b498e6033e",
+            "checked": true
+          },
+          {
+            "id": "578ad493-2d6e-4f0d-b5cb-47b498e6033e",
+            "checked": false
+          },
+          {
+            "id": "578ad493-2d6e-4f0d-b5cb-47b498e6033e",
+            "checked": false
+          }
+        ]
+      }
+    ]
+  }
+}
+

@@ -4,6 +4,7 @@ import (
 	"online-tests/domain"
 	"online-tests/domain/domainmodel"
 
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -34,7 +35,32 @@ func (r *repository) GetByTestCode(testCode *string) (*domainmodel.Test, error) 
 }
 
 func (r *repository) EditTestByTestCode(entry *domainmodel.Test, testCode *string) error {
-	//TODO: Check if id can be set before save.
+
+	var nullUUID uuid.UUID
+
+	for _, question := range entry.Questions {
+		if question.ID != nullUUID {
+			tID, err := r.getQuestionTestIDByQuestionID(&question.ID)
+			if err != nil {
+				return err
+			}
+			if question.TestID != *tID {
+				return domain.ErrConflict
+			}
+		}
+		for _, answer := range question.Answers {
+			if answer.ID != nullUUID {
+				qID, err := r.getAnswerQuestionIDByAnswerID(&answer.ID)
+				if err != nil {
+					return err
+				}
+				if answer.QuestionID != *qID {
+					return domain.ErrConflict
+				}
+			}
+		}
+	}
+
 	for _, question := range entry.Questions {
 		err := r.db.Model(&question).Association("Answers").Replace(&question.Answers)
 
@@ -119,6 +145,26 @@ func (r *repository) GetTestPasswordHashByTestCode(testCode *string) (*string, e
 		return nil, err
 	}
 	return &entry.Password, nil
+}
+
+func (r *repository) getQuestionTestIDByQuestionID(questionID *uuid.UUID) (*uuid.UUID, error) {
+	var entry domainmodel.Question
+	err := r.db.Where("id = ?", questionID).First(&entry).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &entry.TestID, nil
+}
+
+func (r *repository) getAnswerQuestionIDByAnswerID(answerID *uuid.UUID) (*uuid.UUID, error) {
+	var entry domainmodel.Answer
+	err := r.db.Where("id = ?", answerID).First(&entry).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &entry.QuestionID, nil
 }
 
 func NewEntryRepository(dbConn *gorm.DB) domain.TestsRepository {

@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"online-tests/domain"
-	"online-tests/domain/domainmodel"
+	"online-tester-service/domain"
+	"online-tester-service/domain/domainmodel"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"

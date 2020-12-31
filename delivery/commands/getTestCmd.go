@@ -1,6 +1,6 @@
 package commands
 
-import "online-tests/delivery/models/testmodel"
+import "online-tester-service/delivery/models/testmodel"
 
 type GetTestCmd struct {
 	Test *testmodel.Test `json:"test" validate:"required"`

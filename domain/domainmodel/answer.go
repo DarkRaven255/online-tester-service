@@ -1,7 +1,7 @@
 package domainmodel
 
 import (
-	"online-tests/delivery/models/testmodel"
+	"online-tester-service/delivery/models/testmodel"
 	"time"
 
 	"github.com/google/uuid"

@@ -3,7 +3,7 @@ package domainmodel
 import (
 	"errors"
 	"math/rand"
-	"online-tests/delivery/commands"
+	"online-tester-service/delivery/commands"
 	"time"
 
 	"github.com/google/uuid"

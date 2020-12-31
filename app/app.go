@@ -1,6 +1,6 @@
 package app
 
-import "online-tests/domain"
+import "online-tester-service/domain"
 
 type App struct {
 	TestsService domain.TestsService

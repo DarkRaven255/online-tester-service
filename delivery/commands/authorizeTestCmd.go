@@ -1,6 +1,6 @@
 package commands
 
-import "online-tests/delivery/models/testmodel"
+import "online-tester-service/delivery/models/testmodel"
 
 type AuthorizeTestCmd struct {
 	Test *testmodel.TestPassword `json:"test" validate:"required"`

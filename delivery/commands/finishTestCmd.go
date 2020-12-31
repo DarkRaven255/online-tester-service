@@ -1,6 +1,6 @@
 package commands
 
-import "online-tests/delivery/models/testsolvemodel"
+import "online-tester-service/delivery/models/testsolvemodel"
 
 type FinishTestCmd struct {
 	Test *testsolvemodel.Test `json:"test" validate:"required"`

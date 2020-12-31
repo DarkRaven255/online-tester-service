@@ -1,7 +1,7 @@
 package commands
 
 import (
-	"online-tests/delivery/models/testmodel"
+	"online-tester-service/delivery/models/testmodel"
 )
 
 type AddEditTestCmd struct {

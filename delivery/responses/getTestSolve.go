@@ -1,8 +1,8 @@
 package responses
 
 import (
-	"online-tests/delivery/models/testsolvemodel"
-	"online-tests/domain/domainmodel"
+	"online-tester-service/delivery/models/testsolvemodel"
+	"online-tester-service/domain/domainmodel"
 	"time"
 
 	"github.com/google/uuid"

@@ -1,4 +1,4 @@
-# online-tests
+# online-tester-service
 University project.
 
 Project requires `online_tester_service` schema to exist.

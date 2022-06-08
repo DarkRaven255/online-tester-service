@@ -1,11 +1,11 @@
 package service
 
 import (
-	"online-tests/delivery/commands"
-	"online-tests/delivery/responses"
-	"online-tests/domain"
-	"online-tests/domain/domainmodel"
-	"online-tests/utils"
+	"online-tester-service/delivery/commands"
+	"online-tester-service/delivery/responses"
+	"online-tester-service/domain"
+	"online-tester-service/domain/domainmodel"
+	"online-tester-service/utils"
 )
 
 type testsService struct {

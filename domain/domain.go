@@ -1,9 +1,9 @@
 package domain
 
 import (
-	"online-tests/delivery/commands"
-	"online-tests/delivery/responses"
-	"online-tests/domain/domainmodel"
+	"online-tester-service/delivery/commands"
+	"online-tester-service/delivery/responses"
+	"online-tester-service/domain/domainmodel"
 )
 
 type TestsService interface {

@@ -2,9 +2,9 @@ package http
 
 import (
 	"net/http"
-	"online-tests/app"
-	"online-tests/delivery/commands"
-	"online-tests/domain"
+	"online-tester-service/app"
+	"online-tester-service/delivery/commands"
+	"online-tester-service/domain"
 
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
